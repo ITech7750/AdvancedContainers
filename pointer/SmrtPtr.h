@@ -1,7 +1,6 @@
-#ifndef LABA1_SMRTPTR_H
-#define LABA1_SMRTPTR_H
+#ifndef LABA1_SMARTPTR_H
+#define LABA1_SMARTPTR_H
 
-#include <utility> // для std::move
 
 template<class T>
 class SmrtPtr {
@@ -10,20 +9,23 @@ private:
     T *value;
 
 public:
-    explicit SmrtPtr(T *value = nullptr) : value(value), referenceCount(new size_t(1)) {
-        if (value == nullptr) {
-            *referenceCount = 0;
+    explicit SmrtPtr(T *value = nullptr)
+            : value(value), referenceCount(value ? new size_t(1) : nullptr) {}
+
+    // Конструктор копирования
+    SmrtPtr(const SmrtPtr &other)
+            : value(other.value), referenceCount(other.referenceCount) {
+        if (referenceCount) {
+            (*referenceCount)++;
         }
     }
 
-    // Конструктор копирования
-    SmrtPtr(const SmrtPtr &other) : value(other.value), referenceCount(other.referenceCount) {
-        (*referenceCount)++;
-    }
-
     template<class R>
-    SmrtPtr(const SmrtPtr<R> &other) : value(other.value), referenceCount(other.getReferenceCount()) {
-        (*referenceCount)++;
+    SmrtPtr(const SmrtPtr<R> &other)
+            : value(other.value), referenceCount(other.getReferenceCount()) {
+        if (referenceCount) {
+            (*referenceCount)++;
+        }
     }
 
     // Оператор присвоения копии
@@ -33,7 +35,9 @@ public:
 
             value = other.value;
             referenceCount = other.referenceCount;
-            (*referenceCount)++;
+            if (referenceCount) {
+                (*referenceCount)++;
+            }
         }
         return *this;
     }
@@ -44,14 +48,17 @@ public:
 
         value = other.value;
         referenceCount = other.getReferenceCount();
-        (*referenceCount)++;
+        if (referenceCount) {
+            (*referenceCount)++;
+        }
         return *this;
     }
 
     // Оператор присвоения перемещения
-    SmrtPtr(SmrtPtr &&other) noexcept : value(other.value), referenceCount(other.referenceCount) {
+    SmrtPtr(SmrtPtr &&other) noexcept
+            : value(other.value), referenceCount(other.referenceCount) {
         other.value = nullptr;
-        other.referenceCount = new size_t(0);
+        other.referenceCount = nullptr;
     }
 
     SmrtPtr &operator=(SmrtPtr &&other) noexcept {
@@ -62,7 +69,7 @@ public:
             referenceCount = other.referenceCount;
 
             other.value = nullptr;
-            other.referenceCount = new size_t(0);
+            other.referenceCount = nullptr;
         }
         return *this;
     }
@@ -76,7 +83,7 @@ public:
     }
 
     size_t getCount() const {
-        return *referenceCount;
+        return referenceCount ? *referenceCount : 0;
     }
 
     size_t *getReferenceCount() const {
@@ -89,12 +96,15 @@ public:
 
 private:
     void clear() {
-        if (--(*referenceCount) == 0) {
-            delete value;
-            delete referenceCount;
+        if (referenceCount) {
+            if (--(*referenceCount) == 0) {
+                delete value;
+                delete referenceCount;
+            }
         }
+        value = nullptr;
+        referenceCount = nullptr;
     }
-
 };
 
-#endif //LABA1_SMRTPTR_H
+#endif //LABA1_SMARTPTR_H

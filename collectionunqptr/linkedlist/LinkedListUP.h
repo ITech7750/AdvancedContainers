@@ -1,7 +1,6 @@
 #ifndef LAB2_LINKEDLISTUP_H
 #define LAB2_LINKEDLISTUP_H
 
-#include <iostream>
 #include "ElementUP.h"
 #include "../../util/exception/IndexOutOfRange.h"
 #include "../Iterable.h"

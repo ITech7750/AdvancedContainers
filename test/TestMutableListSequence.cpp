@@ -1,4 +1,9 @@
 #include "TestMutableListSequence.h"
+#include "../collectionunqptr/linkedlist/LinkedListUP.h"
+#include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
+#include "../util/tupleUtil.h"
+#include "../test/TestCase.h"
+
 
 void mutableListSequenceTests() {
     int a[] = {67, 2, 8, 4, 51, 44, 89, 46, 0, 3};

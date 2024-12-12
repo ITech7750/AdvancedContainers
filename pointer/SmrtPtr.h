@@ -1,6 +1,7 @@
 #ifndef LABA1_SMARTPTR_H
 #define LABA1_SMARTPTR_H
 
+#include <cstddef> // для nullptr_t
 
 template<class T>
 class SmrtPtr {
@@ -12,7 +13,6 @@ public:
     explicit SmrtPtr(T *value = nullptr)
             : value(value), referenceCount(value ? new size_t(1) : nullptr) {}
 
-    // Конструктор копирования
     SmrtPtr(const SmrtPtr &other)
             : value(other.value), referenceCount(other.referenceCount) {
         if (referenceCount) {
@@ -28,11 +28,9 @@ public:
         }
     }
 
-    // Оператор присвоения копии
     SmrtPtr &operator=(const SmrtPtr &other) {
         if (this != &other) {
             clear();
-
             value = other.value;
             referenceCount = other.referenceCount;
             if (referenceCount) {
@@ -45,7 +43,6 @@ public:
     template<class R>
     SmrtPtr &operator=(const SmrtPtr<R> &other) {
         clear();
-
         value = other.value;
         referenceCount = other.getReferenceCount();
         if (referenceCount) {
@@ -54,7 +51,6 @@ public:
         return *this;
     }
 
-    // Оператор присвоения перемещения
     SmrtPtr(SmrtPtr &&other) noexcept
             : value(other.value), referenceCount(other.referenceCount) {
         other.value = nullptr;
@@ -64,13 +60,16 @@ public:
     SmrtPtr &operator=(SmrtPtr &&other) noexcept {
         if (this != &other) {
             clear();
-
             value = other.value;
             referenceCount = other.referenceCount;
-
             other.value = nullptr;
             other.referenceCount = nullptr;
         }
+        return *this;
+    }
+
+    SmrtPtr &operator=(std::nullptr_t) {
+        clear();
         return *this;
     }
 

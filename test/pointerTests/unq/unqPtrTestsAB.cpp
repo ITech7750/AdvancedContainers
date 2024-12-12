@@ -1,4 +1,12 @@
-#include "unqPtrTests.h"
+#include "unqPtrTestsAB.h"
+#include "../../TestCase.h"
+#include "../../testClasses/A.h"
+#include "../../testClasses/B.h"
+#include "../../../util/tupleUtil.h"
+#include "../../../pointer/SmrtPtr.h"
+#include "../../../pointer/UnqPtr.h"
+
+
 void uniqPtrTesting() {
     A *a = new A(12);
     B *b = new B(100);

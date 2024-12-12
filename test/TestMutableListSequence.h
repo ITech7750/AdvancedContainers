@@ -1,11 +1,5 @@
 #ifndef LABA1_TESTMUTABLELISTSEQUENCE_H
 #define LABA1_TESTMUTABLELISTSEQUENCE_H
-#include <iostream>
-#include "../collectionunqptr/linkedlist/LinkedListUP.h"
-#include "../collectionunqptr/sequence/linkedlistsequence/ListSequence.h"
-#include "../collectionunqptr/sequence/arraysequence/ArraySequence.h"
-#include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
-#include "../util/tupleUtil.h"
-#include "../test/TestCase.h"
+
 void mutableListSequenceTests();
 #endif //LABA1_TESTMUTABLELISTSEQUENCE_H

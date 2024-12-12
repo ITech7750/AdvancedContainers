@@ -9,38 +9,39 @@ private:
     const UnqPtr<T> *unqPtr;
 
 public:
-    ShrdPtr() : unqPtr() {}
+    ShrdPtr() : unqPtr(nullptr) {}
 
     explicit ShrdPtr(const UnqPtr<T>* ptr) : unqPtr(ptr) {}
 
     // Конструктор копирования
-    ShrdPtr(const ShrdPtr<T>& other): unqPtr(other.unqPtr) {}
+    ShrdPtr(const ShrdPtr<T>& other) : unqPtr(other.unqPtr) {}
 
     const T* getValue() const {
-        return unqPtr->getValue();
+        return unqPtr ? unqPtr->getValue() : nullptr;
     }
 
     // Оператор присвоения копии
     ShrdPtr<T>& operator=(const ShrdPtr<T>& other) {
         unqPtr = other.unqPtr;
         return *this;
-    };
+    }
 
     T* operator->() const {
-        if (unqPtr != nullptr) return unqPtr->operator->();
-        return nullptr;
+        return unqPtr ? unqPtr->getValue() : nullptr;
     }
 
     T& operator*() const {
-        return unqPtr->operator*();
+        return *(unqPtr->getValue());
     }
 
-    const UnqPtr<T>* getOrigin() {
+    const UnqPtr<T>* getOrigin() const {
         return unqPtr;
     }
 
     void clearOrigin() {
-        const_cast<UnqPtr<T>*>(unqPtr)->clear();
+        if (unqPtr) {
+            const_cast<UnqPtr<T>*>(unqPtr)->clear();
+        }
     }
 };
 

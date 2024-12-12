@@ -1,15 +1,14 @@
 #ifndef LAB2_LINKEDLIST_H
 #define LAB2_LINKEDLIST_H
 
-#include <iostream>
 #include "Element.h"
 #include "../../util/exception/IndexOutOfRange.h"
-#include "../Iterable.h"
+
 #include "../../pointer/UnqPtr.h"
 #include "../../pointer/ShrdPtr.h"
 
 template<class T>
-class LinkedList: public Iterable<T> {
+class LinkedList : public Iterable<T> {
 private:
     Element<T> *_first = nullptr;
     Element<T> *_last = nullptr;
@@ -23,7 +22,7 @@ public:
     }
 
     LinkedList(const size_t &count, const T *items) : LinkedList() {
-        for (size_t i = 0;i<count;i++) {
+        for (size_t i = 0; i < count; i++) {
             append(items[i]);
         }
     }
@@ -120,7 +119,7 @@ public:
 
     }
 
-    LinkedList<T>* insertAt(size_t index, T value) {
+    LinkedList<T> *insertAt(size_t index, T value) {
         if (index >= _length || index < 0) {
             throw IndexOutOfRange();
         }

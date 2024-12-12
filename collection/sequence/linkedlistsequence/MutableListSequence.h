@@ -1,7 +1,6 @@
 #ifndef LAB2_MUTABLELISTSEQUENCE_H
 #define LAB2_MUTABLELISTSEQUENCE_H
 
-#include "../MutableSequence.h"
 #include "../../linkedlist/LinkedList.h"
 
 template<class T>

@@ -1,4 +1,9 @@
-#include "shrdPtrTests.h"
+#include "shrdPtrTestsAB.h"
+#include "../../TestCase.h"
+#include "../../testClasses/A.h"
+#include "../../testClasses/B.h"
+#include "../../../util/tupleUtil.h"
+#include "../../../pointer/ShrdPtr.h"
 
 void shrdPtrTesting() {
     A *a = new A(12);

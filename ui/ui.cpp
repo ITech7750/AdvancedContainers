@@ -1,4 +1,15 @@
 #include "ui.h"
+#include "../test/pointerTests/smrt/smrtPtrTestsAB.h"
+#include "../test/pointerTests/smrt/SmrtPtrTests.h"
+#include "../test/pointerTests/unq/unqPtrTestsAB.h"
+#include "../test/pointerTests/shrd/shrdPtrTestsAB.h"
+#include "../test/TestMutableListSequence.h"
+#include "../test/loadTestSeq.h"
+#include "../test/loadTests/loadTests.h"
+#include "../test/pointerTests/shrd/ShrdPtrTests.h"
+#include "../test/pointerTests/unq/UnqPtrTests.h"
+#include <iostream>
+
 void runUI() {
     int choice = 0;
     while (choice != 6) {
@@ -17,15 +28,21 @@ void runUI() {
         switch (choice) {
             case 1:
                 std::cout << "Запуск теста умных указателей (Smart Pointer)...\n";
-                smrtPtrTesting();  // Smart Pointer
+                smrtPtrTesting();
+                SmrtPtrTests smrtPtrTests;
+                smrtPtrTests.runAllTests();
                 break;
             case 2:
                 std::cout << "Запуск теста уникальных указателей (Unique Pointer)...\n";
-                uniqPtrTesting();  // Unique Pointer
+                uniqPtrTesting();
+                UnqPtrTests unqPtrTests;
+                unqPtrTests.runAllTests();
                 break;
             case 3:
                 std::cout << "Запуск теста разделяемых указателей (Shared Pointer)...\n";
-                shrdPtrTesting();  // Shared Pointer
+                shrdPtrTesting();
+                ShrdPtrTests shrdPtrTests;
+                shrdPtrTests.runAllTests();
                 break;
             case 4:
                 std::cout << "Запуск теста мутабельной последовательности (mutable sequence) ...\n";

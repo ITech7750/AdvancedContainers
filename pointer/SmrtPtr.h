@@ -94,6 +94,18 @@ public:
         clear();
     }
 
+    template<class R>
+    SmrtPtr<R> dynamic_pointer_cast() const {
+        R *castedValue = dynamic_cast<R *>(value);
+        return SmrtPtr<R>(castedValue, referenceCount);
+    }
+
+    template<class R>
+    SmrtPtr<R> static_pointer_cast() const {
+        R *castedValue = static_cast<R *>(value);
+        return SmrtPtr<R>(castedValue, referenceCount);
+    }
+
 private:
     void clear() {
         if (referenceCount) {
@@ -105,6 +117,17 @@ private:
         value = nullptr;
         referenceCount = nullptr;
     }
+
+    template<class R>
+    SmrtPtr(R *value, size_t *referenceCount)
+            : value(value), referenceCount(referenceCount) {
+        if (referenceCount) {
+            (*referenceCount)++;
+        }
+    }
+
+    template<class R>
+    friend class SmrtPtr;
 };
 
 #endif //LABA1_SMARTPTR_H

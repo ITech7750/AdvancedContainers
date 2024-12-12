@@ -49,6 +49,25 @@ void smrtPtrTesting() {
                         *smrtPtr += 1100; // Изменение значения
                         return *smrtPtr; // Возвращаем новое значение
                     }
+            ),
+            TestCase<bool>(
+                    "SmrtPtr: динамический cast",
+                    true,
+                    [&]() -> bool {
+                        SmrtPtr<A> basePtr(new B(200));
+                        auto derivedPtr = basePtr.dynamic_pointer_cast<B>();
+                        return derivedPtr.operator->() != nullptr;
+                    }
+            ),
+
+            TestCase<bool>(
+                    "SmrtPtr: cтатический  cast",
+                    true,
+                    [&]() -> bool {
+                        SmrtPtr<A> basePtr(new B(300));
+                        auto derivedPtr = basePtr.static_pointer_cast<B>();
+                        return derivedPtr.operator->() != nullptr;
+                    }
             )
     };
 

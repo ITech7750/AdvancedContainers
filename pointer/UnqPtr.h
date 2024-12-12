@@ -16,6 +16,9 @@ public:
     // Конструктор копирования
     UnqPtr(const UnqPtr<T>& other) = delete;
 
+    // Оператор присваивания копированием
+    UnqPtr& operator=(const UnqPtr<T>& other) = delete;
+
     // Конструктор перемещения
     UnqPtr(UnqPtr<T>&& other) noexcept
             : value(other.value) {
@@ -39,9 +42,11 @@ public:
     }
 
     UnqPtr<T>& operator=(UnqPtr<T>&& other) {
-        delete value;
-        value = other.value;
-        other.value = nullptr;
+        if (this != &other) {
+            delete value;
+            value = other.value;
+            other.value = nullptr;
+        }
         return *this;
     }
 
@@ -52,7 +57,8 @@ public:
     }
 
     void setValue(T value) {
-        value = new T(value);
+        clear();
+        this->value = new T(value);
     }
 
     void clear() {
@@ -62,6 +68,5 @@ public:
 private:
 
 };
-
 
 #endif //LABA1_UNQPTR_H

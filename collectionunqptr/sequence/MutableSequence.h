@@ -3,6 +3,7 @@
 
 
 #include "Sequence.h"
+#include "../../pointer/UnqPtr.h"
 
 template<class T>
 class MutableSequence: public Iterable<T> {
@@ -19,9 +20,10 @@ public:
 
     virtual void operator+=(const Iterable<T> &list) = 0;
 
-    virtual T operator[](size_t index) {
-        return this->get(index);
-    }
+    virtual UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) = 0;
+
+    virtual   UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) = 0;
+
 };
 
 

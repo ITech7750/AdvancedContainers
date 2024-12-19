@@ -8,7 +8,7 @@ class Iterable {
 public:
     virtual T get(size_t index) const = 0;
 
-    virtual T operator[](size_t index) const {
+    T operator[](size_t index) const {
         return get(index);
     }
 
@@ -26,7 +26,7 @@ public:
         return os;
     }
 
-    virtual bool operator==(const Iterable<T>& other) {
+    virtual bool operator==(const Iterable<T>& other) const{
         if (other.size() != size()) return false;
         for (size_t i = 0;i<size();i++) {
             if (other[i] != get(i)) return false;

@@ -8,66 +8,228 @@
 #include "../test/loadTests/loadTests.h"
 #include "../test/pointerTests/shrd/ShrdPtrTests.h"
 #include "../test/pointerTests/unq/UnqPtrTests.h"
+#include "../test/sorts/DataTestSuite.h"
+#include "../test/sorts/InteractiveTestSuite.h"
 #include <iostream>
+
+
+void runPointerTestsUI() {
+    int choice;
+    std::cout << "\n=== Меню тестов указателей ===\n";
+    std::cout << "1. Тест умных указателей (Smart Pointer)\n";
+    std::cout << "2. Тест уникальных указателей (Unique Pointer)\n";
+    std::cout << "3. Тест разделяемых указателей (Shared Pointer)\n";
+    std::cout << "0. Вернуться в главное меню\n";
+    std::cout << "Введите ваш выбор: ";
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1:
+            std::cout << "Запуск теста умных указателей...\n";
+            smrtPtrTesting();
+            SmrtPtrTests().runAllTests();
+            break;
+        case 2:
+            std::cout << "Запуск теста уникальных указателей...\n";
+            uniqPtrTesting();
+            UnqPtrTests().runAllTests();
+            break;
+        case 3:
+            std::cout << "Запуск теста разделяемых указателей...\n";
+            shrdPtrTesting();
+            ShrdPtrTests().runAllTests();
+            break;
+        case 0:
+            return;
+        default:
+            std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+    }
+}
+
+void runSequenceTestsUI() {
+    int choice;
+    std::cout << "\n=== Меню тестов последовательностей ===\n";
+    std::cout << "1. Тест мутабельной последовательности\n";
+    std::cout << "2. Нагрузочные тесты с корректируемой нагрузкой\n";
+    std::cout << "3. Нагрузочные тесты\n";
+    std::cout << "0. Вернуться в главное меню\n";
+    std::cout << "Введите ваш выбор: ";
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1:
+            std::cout << "Запуск теста мутабельной последовательности...\n";
+            mutableListSequenceTests();
+            break;
+        case 2: {
+            int k;
+            std::cout << "Введите степень числа элементов (10^k): ";
+            std::cin >> k;
+            std::cout << "Запуск нагрузочного теста для 10^" << k << " элементов...\n";
+            std::cout << loadTestSeq(k) << "\n";
+            break;
+        }
+        case 3:
+            std::cout << "Запуск нагрузочных тестов...\n";
+            loadTests();
+            break;
+        case 0:
+            return;
+        default:
+            std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+    }
+}
+
+
+
+void runCreateUI() {
+    int choice;
+    std::cout << "Интерактивный тестовый набор\n";
+    std::cout << "1. Сгенерировать новые данные для теста\n";
+    std::cout << "2. Загрузить существующие данные\n";
+    std::cout << "Введите ваш выбор (1 или 2): ";
+    std::cin >> choice;
+
+    InteractiveTestSuite testSuite;
+    MutableListSequenceUnqPtr<Person>* data = nullptr;
+
+    if (choice == 1) {
+        size_t count;
+        std::cout << "Введите количество записей для генерации данных теста: ";
+        std::cin >> count;
+
+        data = testSuite.generateTestData(count);
+
+        int formatChoice;
+        std::cout << "Выберите формат для сохранения (1 - JSON, 2 - TXT): ";
+        std::cin >> formatChoice;
+
+        std::cin.ignore();
+        std::string filename;
+        std::cout << "Введите имя файла (или оставьте пустым для имени по умолчанию): ";
+        std::getline(std::cin, filename);
+
+        std::string savedFile = testSuite.saveTestData(data, formatChoice, filename);
+        std::cout << "Данные сохранены в файл " << savedFile << ".\n";
+
+    } else if (choice == 2) {
+        int formatChoice;
+        std::cout << "Выберите формат для загрузки (1 - JSON, 2 - TXT): ";
+        std::cin >> formatChoice;
+
+        std::cin.ignore();
+        std::string filename;
+        std::cout << "Введите имя файла (или оставьте пустым для имени по умолчанию): ";
+        std::getline(std::cin, filename);
+
+        if (filename.empty()) {
+            filename = (formatChoice == 1) ? "data.json" : "data.txt";
+        }
+
+        try {
+            data = testSuite.loadTestData(formatChoice, filename);
+            std::cout << "Загружено " << data->size() << " записей из файла: " << filename << ".\n";
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << "\n";
+            return;
+        }
+    } else {
+        std::cout << "Некорректный выбор. Выход...\n";
+        return;
+    }
+
+    for (size_t i = 0; i < data->size(); ++i) {
+        const Person& p = data->get(i);
+        std::cout << "Запись " << i + 1 << ": "
+                  << p.firstName << " " << p.lastName << ", Возраст: " << p.age
+                  << ", Адрес: " << p.address << ", Электронная почта: " << p.email << "\n";
+    }
+
+    delete data;
+}
+
+void runSortTestsUI() {
+    int choice;
+    DataTestSuite testSuite;
+
+    do {
+        std::cout << "\n=== Меню тестов сортировок ===\n";
+        std::cout << "1. Тест сортировки по возрасту из файла (JSON)\n";
+        std::cout << "2. Тест сортировки по имени из файла (TXT)\n";
+        std::cout << "3. Тест сортировки по возрасту (сгенерированные данные)\n";
+        std::cout << "4. Тест сортировки по имени (сгенерированные данные)\n";
+        std::cout << "5. Тест производительности всех алгоритмов сортировки\n";
+        std::cout << "6. Выполнить все тесты\n";
+        std::cout << "7. Генерация данных для тестов\n";
+        std::cout << "0. Вернуться в главное меню\n";
+        std::cout << "Введите ваш выбор: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                testSuite.testSortByAgeFromFile("data.json", true);
+                break;
+            case 2:
+                testSuite.testSortByNameFromFile("data.txt", false);
+                break;
+            case 3: {
+                size_t dataSize;
+                std::cout << "Введите размер данных: ";
+                std::cin >> dataSize;
+                testSuite.testSortByAgeGenerated(dataSize);
+                break;
+            }
+            case 4: {
+                size_t dataSize;
+                std::cout << "Введите размер данных: ";
+                std::cin >> dataSize;
+                testSuite.testSortByNameGenerated(dataSize);
+                break;
+            }
+            case 5: {
+                size_t dataSize;
+                std::cout << "Введите размер данных: ";
+                std::cin >> dataSize;
+                testSuite.testSortPerformanceForAllAlgorithms(dataSize);
+                break;
+            }
+            case 6:
+                testSuite.runAllTests();
+                break;
+            case 7:
+                runCreateUI;
+                break;
+            case 0:
+                return;
+            default:
+                std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+        }
+
+    } while (choice != 0);
+}
 
 void runUI() {
     int choice = 0;
-    while (choice != 6) {
-        std::cout << "\nМеню:\n";
-        std::cout << "1. Запустить тест умных указателей (Smart Pointer)\n";
-        std::cout << "2. Запустить тест уникальных указателей (Unique Pointer)\n";
-        std::cout << "3. Запустить тест разделяемых указателей (Shared Pointer)\n";
-        std::cout << "4. Запустить тест мутабельной последовательности (mutable sequence)\n";
-        std::cout << "5. Запустить нагрузочные тесты с корректируемой нагрузкой\n";
-        std::cout << "6. Запустить нагрузочные тесты\n";
-        std::cout << "7. Запустить все тесты сразу\n";
-        std::cout << "0. Выйти\n";
+    while (choice != 4) {
+        std::cout << "\n=== Главное меню ===\n";
+        std::cout << "1. Тесты указателей\n";
+        std::cout << "2. Тесты последовательностей\n";
+        std::cout << "3. Тесты сортировок\n";
+        std::cout << "4. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                std::cout << "Запуск теста умных указателей (Smart Pointer)...\n";
-                smrtPtrTesting();
-                SmrtPtrTests smrtPtrTests;
-                smrtPtrTests.runAllTests();
+                runPointerTestsUI();
                 break;
             case 2:
-                std::cout << "Запуск теста уникальных указателей (Unique Pointer)...\n";
-                uniqPtrTesting();
-                UnqPtrTests unqPtrTests;
-                unqPtrTests.runAllTests();
+                runSequenceTestsUI();
                 break;
             case 3:
-                std::cout << "Запуск теста разделяемых указателей (Shared Pointer)...\n";
-                shrdPtrTesting();
-                ShrdPtrTests shrdPtrTests;
-                shrdPtrTests.runAllTests();
+                runSortTestsUI();
                 break;
             case 4:
-                std::cout << "Запуск теста мутабельной последовательности (mutable sequence) ...\n";
-                mutableListSequenceTests();
-                break;
-            case 5:
-                int k;
-                std::cout << "Введите степень числа элементов (10^k): ";
-                std::cin >> k;
-                std::cout << "Запуск нагрузочного теста для 10^" << k << " элементов...\n";
-                std::cout << loadTestSeq(k) << "\n";
-                break;
-            case 6:
-                std::cout << "Запуск нагрузочных тестов...\n";
-                loadTests();
-                break;
-            case 7:
-                std::cout << "Запуск всех тестов сразу...\n";
-                smrtPtrTesting();
-                uniqPtrTesting();
-                shrdPtrTesting();
-                mutableListSequenceTests();
-                loadTests();
-                break;
-            case 0:
                 std::cout << "Завершение программы...\n";
                 break;
             default:
@@ -75,4 +237,3 @@ void runUI() {
         }
     }
 }
-

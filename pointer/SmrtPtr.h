@@ -1,7 +1,7 @@
 #ifndef LABA1_SMARTPTR_H
 #define LABA1_SMARTPTR_H
 
-#include <cstddef> // для nullptr_t
+#include <cstddef>
 
 template<class T>
 class SmrtPtr {

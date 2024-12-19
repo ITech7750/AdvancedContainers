@@ -45,13 +45,13 @@ public:
         return items->isEmpty();
     }
 
-    MutableListSequence<T>* getSubsequence(size_t start, size_t end) {
+    UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) {
         LinkedListUP<T> *subItems = items->getSublist(start, end);
         auto subSequence = new MutableListSequence(*subItems);
         return subSequence;
     };
 
-    MutableListSequence<T>* concat(const Iterable<T> &iterable) {
+    UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) {
         auto nItems = LinkedListUP<T>();
         for (size_t i = 0; i < size(); i++) {
             nItems.append((*items)[i]);

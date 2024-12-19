@@ -73,8 +73,8 @@ public:
     }
 
     LinkedListUP<T> *getSublist(size_t start, size_t end) {
-        if (start >= _length || end >= _length || start < 0 || end < 0 || start >= end) {
-            throw IndexOutOfRange();
+        if (start >= _length || start >= end) {
+            throw std::runtime_error("error");
         }
         auto *buf = new LinkedListUP<T>();
         for (size_t i = 0; i < _length; i++) {

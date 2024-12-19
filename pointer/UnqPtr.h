@@ -4,12 +4,12 @@
 template<class T>
 class UnqPtr {
 private:
-    T *value;
+    T* value;
 
 public:
     UnqPtr() : value(nullptr) {}
 
-    UnqPtr(T *value) : value(value) {}
+    UnqPtr(T* value) : value(value) {}
 
     UnqPtr(const T& value) : value(new T(value)) {}
 
@@ -41,7 +41,7 @@ public:
         return *value;
     }
 
-    UnqPtr<T>& operator=(UnqPtr<T>&& other) {
+    UnqPtr<T>& operator=(UnqPtr<T>&& other) noexcept {
         if (this != &other) {
             delete value;
             value = other.value;
@@ -51,22 +51,27 @@ public:
     }
 
     UnqPtr<T>& operator=(T* val) {
-        delete value;
-        value = val;
+        if (value != val) {
+            delete value;
+            value = val;
+        }
         return *this;
     }
 
-    void setValue(T value) {
+    void setValue(const T& value) {
         clear();
         this->value = new T(value);
     }
 
     void clear() {
-        delete value;
-        value = nullptr;
+        if (value != nullptr) {
+            delete value;
+            value = nullptr;
+        }
     }
-private:
-
+    operator bool() const {
+        return value != nullptr;
+    }
 };
 
-#endif //LABA1_UNQPTR_H
+#endif // LABA1_UNQPTR_H

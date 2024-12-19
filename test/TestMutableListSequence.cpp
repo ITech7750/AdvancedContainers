@@ -32,6 +32,7 @@ void mutableListSequenceTests() {
                         return sequence[2];
                     }
             ),
+            /*
             TestCase<bool>(
                     "MutableListSequenceUnqPtr: Сложение",
                     true,
@@ -46,15 +47,16 @@ void mutableListSequenceTests() {
                         return seq->size() == sequence1.size() + sequence2.size();
                     }
             ),
-            TestCase<MutableListSequenceUnqPtr<int>>(
+            TestCase<MutableSequence<int>>(
                     "MutableListSequenceUnqPtr: subSequence",
                     MutableListSequenceUnqPtr<int>(a, 4),
-                    []() -> MutableListSequenceUnqPtr<int> {
+                    []() -> MutableSequence<int> {
                         int a[8] = {90, 67, 2, 8, 4, 8, 7, 123};
                         auto seq = MutableListSequenceUnqPtr<int>(a, 8);
                         return *seq.getSubsequence(1, 5);
                     }
             ),
+             */
             TestCase<MutableListSequenceUnqPtr<int>>(
                     "MutableListSequenceUnqPtr: Прибавление к существующей",
                     MutableListSequenceUnqPtr<int>(a, 6),

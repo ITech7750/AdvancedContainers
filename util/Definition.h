@@ -4,7 +4,8 @@
 #include <string>
 #include <map>
 
-#define String std::string
 #define Map std::map
+using String = std::string;
+
 
 #endif //LAB2_DEFINITION_H

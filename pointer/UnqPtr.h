@@ -1,5 +1,6 @@
 #ifndef LABA1_UNQPTR_H
 #define LABA1_UNQPTR_H
+#include <stdexcept>
 
 template<class T>
 class UnqPtr {
@@ -20,8 +21,7 @@ public:
     UnqPtr& operator=(const UnqPtr<T>& other) = delete;
 
     // Конструктор перемещения
-    UnqPtr(UnqPtr<T>&& other) noexcept
-            : value(other.value) {
+    UnqPtr(UnqPtr<T>&& other) noexcept : value(other.value) {
         other.value = nullptr;
     }
 
@@ -39,6 +39,13 @@ public:
 
     T& operator*() const {
         return *value;
+    }
+
+    T& operator[](size_t index) const {
+        if (!value) {
+            throw std::runtime_error("Accessing null pointer");
+        }
+        return value[index];
     }
 
     UnqPtr<T>& operator=(UnqPtr<T>&& other) noexcept {
@@ -65,10 +72,11 @@ public:
 
     void clear() {
         if (value != nullptr) {
-            delete value;
+            delete[] value;
             value = nullptr;
         }
     }
+
     operator bool() const {
         return value != nullptr;
     }

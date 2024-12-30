@@ -27,6 +27,9 @@ add_executable(Pointers
         test/helper/TestDataManager.cpp
         test/sorts/DataTestSuite.cpp
         test/sorts/InteractiveTestSuite.cpp
+        "collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
+        collectionunqptr/sequence/arraysequence/ArraySequence.h
+        collectionunqptr/dinamicarray/DynamicArrayUP.h
 )
 
 target_link_libraries(Pointers nlohmann_json::nlohmann_json)

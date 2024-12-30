@@ -8,8 +8,9 @@
 #include "../test/loadTests/loadTests.h"
 #include "../test/pointerTests/shrd/ShrdPtrTests.h"
 #include "../test/pointerTests/unq/UnqPtrTests.h"
-#include "../test/sorts/DataTestSuite.h"
-#include "../test/sorts/InteractiveTestSuite.h"
+//#include "../test/sorts/DataTestSuite.h"
+#include "../test/sorts/DataTestSuiteArray.h"
+#include "../test/sorts/InteractiveTestSuiteArray.h"
 #include <iostream>
 
 
@@ -66,7 +67,7 @@ void runSequenceTestsUI() {
             std::cout << "Введите степень числа элементов (10^k): ";
             std::cin >> k;
             std::cout << "Запуск нагрузочного теста для 10^" << k << " элементов...\n";
-            std::cout << loadTestSeq(k) << "\n";
+            //std::cout << loadTestSeq(k) << "\n";
             break;
         }
         case 3:
@@ -91,7 +92,7 @@ void runCreateUI() {
     std::cin >> choice;
 
     InteractiveTestSuite testSuite;
-    MutableListSequenceUnqPtr<Person>* data = nullptr;
+    MutableArraySequenceUnqPtr<Person>* data = nullptr;
 
     if (choice == 1) {
         size_t count;

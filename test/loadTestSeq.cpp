@@ -3,7 +3,7 @@
 #include "loadTests/loadTests.h"
 #include <chrono>
 #include <fstream>
-
+/*
 #define timeMls std::chrono::high_resolution_clock::time_point
 #define clock std::chrono::high_resolution_clock
 #define interval std::chrono::duration<double>
@@ -40,3 +40,4 @@ char *loadTestSeq(int k) {
     std::cout << "Данные записаны в файл.\n";
     return result;
 }
+*/

@@ -3,9 +3,11 @@
 
 #include <string>
 #include <sstream>
+#include <utility>
 
 class Person {
 public:
+    // Поля класса
     std::string firstName;
     std::string lastName;
     int age;
@@ -17,19 +19,33 @@ public:
     std::string email;
     std::string jobTitle;
 
+    // Конструктор
     Person(std::string fn, std::string ln, int age, std::string addr, double h, double w, int yob,
            std::string phone, std::string email, std::string job)
-            : firstName(std::move(fn)), lastName(std::move(ln)), age(age), address(std::move(addr)),
-              height(h), weight(w), yearOfBirth(yob), phoneNumber(std::move(phone)),
-              email(std::move(email)), jobTitle(std::move(job)) {}
+            : firstName(std::move(fn)),
+              lastName(std::move(ln)),
+              age(age),
+              address(std::move(addr)),
+              height(h),
+              weight(w),
+              yearOfBirth(yob),
+              phoneNumber(std::move(phone)),
+              email(std::move(email)),
+              jobTitle(std::move(job)) {}
 
+    // Метод для строкового представления
     std::string toString() const {
         std::ostringstream oss;
-        oss << firstName << " " << lastName << ", Age: " << age << ", Height: " << height
-            << ", Weight: " << weight << ", Address: " << address << ", Job: " << jobTitle;
+        oss << firstName << " " << lastName
+            << ", Age: " << age
+            << ", Height: " << height
+            << ", Weight: " << weight
+            << ", Address: " << address
+            << ", Job: " << jobTitle;
         return oss.str();
     }
 
+    // Операторы сравнения
     bool operator==(const Person& other) const {
         return firstName == other.firstName &&
                lastName == other.lastName &&

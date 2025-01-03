@@ -1,13 +1,13 @@
 #include "DataTestSuiteArray.h"
 #include "../helper/TestDataManagerArray.h"
-#include "../../sort/SorterService.h"
+#include "../../sort/SorterServiceArray.h"
 #include <iostream>
 #include <cassert>
 #include <vector>
 
-void DataTestSuite::testSortByAgeFromFile(const std::string& filename, bool isJson) {
-    auto data = isJson ? TestDataManager::loadFromJson(filename)
-                       : TestDataManager::loadFromTxt(filename);
+void DataTestSuiteArray::testSortByAgeFromFile(const std::string& filename, bool isJson) {
+    auto data = isJson ? TestDataManagerArray::loadFromJson(filename)
+                       :TestDataManagerArray::loadFromTxt(filename);
 
     SorterService<Person>::sort(*data, compareByAge, "quick");
 
@@ -19,9 +19,9 @@ void DataTestSuite::testSortByAgeFromFile(const std::string& filename, bool isJs
     delete data;
 }
 
-void DataTestSuite::testSortByNameFromFile(const std::string& filename, bool isJson) {
-    auto data = isJson ? TestDataManager::loadFromJson(filename)
-                       : TestDataManager::loadFromTxt(filename);
+void DataTestSuiteArray::testSortByNameFromFile(const std::string& filename, bool isJson) {
+    auto data = isJson ? TestDataManagerArray::loadFromJson(filename)
+                       : TestDataManagerArray::loadFromTxt(filename);
 
     SorterService<Person>::sort(*data, compareByName, "bubble");
 
@@ -33,8 +33,8 @@ void DataTestSuite::testSortByNameFromFile(const std::string& filename, bool isJ
     delete data;
 }
 
-void DataTestSuite::testSortByAgeGenerated(size_t dataSize) {
-    auto data = TestDataManager::generateTestData(dataSize);
+void DataTestSuiteArray::testSortByAgeGenerated(size_t dataSize) {
+    auto data = TestDataManagerArray::generateTestData(dataSize);
 
     SorterService<Person>::sort(*data, compareByAge, "insertion");
 
@@ -46,8 +46,8 @@ void DataTestSuite::testSortByAgeGenerated(size_t dataSize) {
     delete data;
 }
 
-void DataTestSuite::testSortByNameGenerated(size_t dataSize) {
-    auto data = TestDataManager::generateTestData(dataSize);
+void DataTestSuiteArray::testSortByNameGenerated(size_t dataSize) {
+    auto data = TestDataManagerArray::generateTestData(dataSize);
 
     SorterService<Person>::sort(*data, compareByName, "heap");
 
@@ -59,12 +59,12 @@ void DataTestSuite::testSortByNameGenerated(size_t dataSize) {
     delete data;
 }
 
-void DataTestSuite::testSortPerformanceForAllAlgorithms(size_t dataSize) {
-    auto dataQuick = TestDataManager::generateTestData(dataSize);
-    auto dataMerge = TestDataManager::generateTestData(dataSize);
-    auto dataBubble = TestDataManager::generateTestData(dataSize);
-    auto dataInsertion = TestDataManager::generateTestData(dataSize);
-    auto dataHeap = TestDataManager::generateTestData(dataSize);
+void DataTestSuiteArray::testSortPerformanceForAllAlgorithms(size_t dataSize) {
+    auto dataQuick = TestDataManagerArray::generateTestData(dataSize);
+    auto dataMerge = TestDataManagerArray::generateTestData(dataSize);
+    auto dataBubble = TestDataManagerArray::generateTestData(dataSize);
+    auto dataInsertion = TestDataManagerArray::generateTestData(dataSize);
+    auto dataHeap = TestDataManagerArray::generateTestData(dataSize);
 
     double quickSortTime = SorterService<Person>::measureSortTime(*dataQuick, compareByAge, "quick");
     double mergeSortTime = SorterService<Person>::measureSortTime(*dataMerge, compareByAge, "merge");
@@ -73,13 +73,14 @@ void DataTestSuite::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     double heapSortTime = SorterService<Person>::measureSortTime(*dataHeap, compareByAge, "heap");
 
     delete dataQuick;
-    delete dataMerge;
+    //delete dataMerge;
     delete dataBubble;
     delete dataInsertion;
     delete dataHeap;
+
 }
 
-void DataTestSuite::runAllTests() {
+void DataTestSuiteArray::runAllTests() {
     testSortByAgeFromFile("data.json", true);
     testSortByNameFromFile("data.txt", false);
 

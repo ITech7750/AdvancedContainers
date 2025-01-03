@@ -4,7 +4,7 @@
 #include <string>
 #include <cstddef>
 
-class DataTestSuite {
+class DataTestSuiteArray {
 public:
     // Тесты сортировки по возрасту и имени с использованием данных из файла
     void testSortByAgeFromFile(const std::string& filename, bool isJson);

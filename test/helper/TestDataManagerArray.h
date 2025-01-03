@@ -6,15 +6,15 @@
 #include "TestHelpers.h"
 #include "../../collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
 
-class TestDataManager {
+class TestDataManagerArray {
 public:
-    static  MutableArraySequenceUnqPtr<Person>* generateTestData(size_t count);
+    static MutableArraySequenceUnqPtr<Person>* generateTestData(size_t count);
 
-    static void saveToJson(const  MutableArraySequenceUnqPtr<Person>& data, const std::string& filename);
-    static  MutableArraySequenceUnqPtr<Person>* loadFromJson(const std::string& filename);
+    static void saveToJson(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename);
+    static MutableArraySequenceUnqPtr<Person>* loadFromJson(const std::string& filename);
 
-    static void saveToTxt(const  MutableArraySequenceUnqPtr<Person>& data, const std::string& filename);
-    static  MutableArraySequenceUnqPtr<Person>* loadFromTxt(const std::string& filename);
+    static void saveToTxt(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename);
+    static MutableArraySequenceUnqPtr<Person>* loadFromTxt(const std::string& filename);
 };
 
 #endif // TEST_DATA_MANAGER_H

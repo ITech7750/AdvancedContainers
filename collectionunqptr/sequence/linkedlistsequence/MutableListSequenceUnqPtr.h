@@ -56,8 +56,6 @@ public:
         return UnqPtr<MutableSequence<T>>(new MutableListSequenceUnqPtr(std::move(*subItems)));
     }
 
-
-
     UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) override{
         auto nItems = LinkedListUP<T>();
         for (size_t i = 0; i < size(); i++) {
@@ -73,6 +71,7 @@ public:
     UnqPtr<MutableListSequenceUnqPtr<T>> operator+(const Iterable<T> &iterable) {
         return (MutableListSequenceUnqPtr<int> *) concat(iterable);
     }
+
 
     MutableListSequenceUnqPtr<T> &operator=(const MutableListSequenceUnqPtr<T> &other) {
         items->removeAll();

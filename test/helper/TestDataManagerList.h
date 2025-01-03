@@ -6,7 +6,7 @@
 #include "TestHelpers.h"
 #include "../../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
 
-class TestDataManager {
+class TestDataManagerList {
 public:
     static MutableListSequenceUnqPtr<Person>* generateTestData(size_t count);
 

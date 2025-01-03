@@ -1,4 +1,4 @@
-#include "TestDataManager.h"
+#include "TestDataManagerList.h"
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -8,7 +8,7 @@
 
 using json = nlohmann::json;
 
-MutableListSequenceUnqPtr<Person>* TestDataManager::generateTestData(size_t count) {
+MutableListSequenceUnqPtr<Person>* TestDataManagerList::generateTestData(size_t count) {
     auto list = new MutableListSequenceUnqPtr<Person>();
 
     std::random_device rd;
@@ -35,7 +35,7 @@ MutableListSequenceUnqPtr<Person>* TestDataManager::generateTestData(size_t coun
     return list;
 }
 
-void TestDataManager::saveToJson(const MutableListSequenceUnqPtr<Person>& data, const std::string& filename) {
+void TestDataManagerList::saveToJson(const MutableListSequenceUnqPtr<Person>& data, const std::string& filename) {
     json j;
     for (size_t i = 0; i < data.size(); ++i) {
         const Person& p = data.get(i);
@@ -57,7 +57,7 @@ void TestDataManager::saveToJson(const MutableListSequenceUnqPtr<Person>& data, 
     file.close();
 }
 
-MutableListSequenceUnqPtr<Person>* TestDataManager::loadFromJson(const std::string& filename) {
+MutableListSequenceUnqPtr<Person>* TestDataManagerList::loadFromJson(const std::string& filename) {
     if (!std::filesystem::exists(filename)) {
         auto generatedData = generateTestData(10); // Генерируем 10 записей.
         saveToJson(*generatedData, filename);
@@ -87,7 +87,7 @@ MutableListSequenceUnqPtr<Person>* TestDataManager::loadFromJson(const std::stri
     return list;
 }
 
-void TestDataManager::saveToTxt(const MutableListSequenceUnqPtr<Person>& data, const std::string& filename) {
+void TestDataManagerList::saveToTxt(const MutableListSequenceUnqPtr<Person>& data, const std::string& filename) {
     std::ofstream file(filename);
     for (size_t i = 0; i < data.size(); ++i) {
         const Person& p = data.get(i);
@@ -98,7 +98,7 @@ void TestDataManager::saveToTxt(const MutableListSequenceUnqPtr<Person>& data, c
     file.close();
 }
 
-MutableListSequenceUnqPtr<Person>* TestDataManager::loadFromTxt(const std::string& filename) {
+MutableListSequenceUnqPtr<Person>* TestDataManagerList::loadFromTxt(const std::string& filename) {
     if (!std::filesystem::exists(filename)) {
         auto generatedData = generateTestData(10); // Генерируем 10 записей.
         saveToTxt(*generatedData, filename);

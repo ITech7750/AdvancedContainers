@@ -157,7 +157,7 @@ public:
         }
         if (index == _length - 1) {
             ShrdPtr<ElementUP<T>> prv = _last->getPrevious();
-            delete _last;
+            //delete _last;
             if (_length != 2) {
                 _last = UnqPtr<ElementUP<T>>(prv.operator->());
                 if (_last.value != nullptr) {

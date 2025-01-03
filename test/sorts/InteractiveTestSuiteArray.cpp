@@ -3,11 +3,11 @@
 #include <ctime>
 #include <filesystem>
 
-MutableArraySequenceUnqPtr<Person>* InteractiveTestSuite::generateTestData(size_t count) {
-    return TestDataManager::generateTestData(count);
+MutableArraySequenceUnqPtr<Person>* InteractiveTestSuiteArray::generateTestData(size_t count) {
+    return TestDataManagerArray::generateTestData(count);
 }
 
-std::string InteractiveTestSuite::saveTestData(MutableArraySequenceUnqPtr<Person>* data, int formatChoice, const std::string& filename) {
+std::string InteractiveTestSuiteArray::saveTestData(MutableArraySequenceUnqPtr<Person>* data, int formatChoice, const std::string& filename) {
     std::string finalFilename = filename;
 
     if (finalFilename.empty()) {
@@ -19,18 +19,18 @@ std::string InteractiveTestSuite::saveTestData(MutableArraySequenceUnqPtr<Person
     }
 
     if (formatChoice == 1) {
-        TestDataManager::saveToJson(*data, finalFilename);
+        TestDataManagerArray::saveToJson(*data, finalFilename);
     } else {
-        TestDataManager::saveToTxt(*data, finalFilename);
+        TestDataManagerArray::saveToTxt(*data, finalFilename);
     }
 
     return finalFilename;
 }
 
-MutableArraySequenceUnqPtr<Person>* InteractiveTestSuite::loadTestData(int formatChoice, const std::string& filename) {
+MutableArraySequenceUnqPtr<Person>* InteractiveTestSuiteArray::loadTestData(int formatChoice, const std::string& filename) {
     if (!std::filesystem::exists(filename)) {
         throw std::runtime_error("Файл не найден: " + filename);
     }
 
-    return (formatChoice == 1) ? TestDataManager::loadFromJson(filename) : TestDataManager::loadFromTxt(filename);
+    return (formatChoice == 1) ? TestDataManagerArray::loadFromJson(filename) : TestDataManagerArray::loadFromTxt(filename);
 }

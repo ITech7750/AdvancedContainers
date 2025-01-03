@@ -2,8 +2,10 @@
 #define LABA1_UI_H
 
 void runUI();
-void runSortTestsUI();
+void runSortTestsUIList();
+void runSortTestsUIArray();
 void runPointerTestsUI();
-void runCreateUI();
+void runCreateUIArray();
+void runCreateUIList();
 void runSequenceTestsUI();
 #endif //LABA1_UI_H

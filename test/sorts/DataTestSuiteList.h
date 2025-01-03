@@ -1,10 +1,10 @@
-#ifndef DATA_TEST_SUITE_H
-#define DATA_TEST_SUITE_H
+#ifndef DATA_TEST_LIST_SUITE_H
+#define DATA_TEST_LIST_SUITE_H
 
 #include <string>
 #include <cstddef>
 
-class DataTestSuite {
+class DataTestSuiteList {
 public:
     // Тесты сортировки по возрасту и имени с использованием данных из файла
     void testSortByAgeFromFile(const std::string& filename, bool isJson);
@@ -21,4 +21,4 @@ public:
     void runAllTests();
 };
 
-#endif // DATA_TEST_SUITE_H
+#endif // DATA_TEST_LIST_SUITE_H

@@ -2,67 +2,99 @@
 #define LAB2_ARRAYSEQUENCE_H
 
 #include "../Sequence.h"
-#include "../../../unqptr/UnqPtr.h"
-#include <algorithm>
-#include <stdexcept>
+#include "../../dinamicarray/DynamicArray.h"
 
 template<class T>
 class ArraySequence : public Sequence<T> {
 private:
-    UnqPtr<T[]> items;  // Используем UnqPtr для массива
-    size_t length;
-
+    DynamicArray<T> *items;
 public:
-    ArraySequence() : items(nullptr), length(0) {}
+    ArraySequence() {
+        items = new DynamicArray<T>();
+    }
 
-    ArraySequence(T* _items, size_t count)
-        : items(new T[count]), length(count) {
-        std::copy(_items, _items + count, items.getValue());
+    ArraySequence(T *it, int count) {
+        items = new DynamicArray<T>(count, it);
+    }
+
+    explicit ArraySequence(DynamicArray<T> &list) {
+        items = new DynamicArray<T>();
+        for (int i = 0; i < list.getSize(); i++) {
+            (*items).add(list[i]);
+        }
     }
 
     T getFirst() override {
-        if (isEmpty()) throw std::runtime_error("Sequence is empty.");
-        return items[0];
+        return (*items)[0];
     }
 
     T getLast() override {
-        if (isEmpty()) throw std::runtime_error("Sequence is empty.");
-        return items[length - 1];
+        return (*items)[getLength() - 1];
     }
 
-    T get(size_t index) override {
-        if (index >= length) throw std::runtime_error("Index out of range.");
-        return items[index];
+    T get(int index) {
+        return (*items)[index];
+    };
+
+    T operator[](int index) {
+        return get(index);
     }
 
-    size_t size() const override {
-        return length;
+    int getLength() override {
+        return (*items).getSize();
     }
 
-    bool isEmpty() override {
-        return length == 0;
-    }
-
-    ArraySequence<T>* getSubsequence(size_t start, size_t end) override {
-        if (start > end || end >= length) throw std::runtime_error("Invalid range.");
-        auto subItems = new T[end - start + 1];
-        std::copy(items.getValue() + start, items.getValue() + end + 1, subItems);
-        return new ArraySequence(subItems, end - start + 1);
-    }
-
-    ArraySequence<T>* concat(const Sequence<T>& other) override {
-        size_t newLength = length + other.size();
-        auto newItems = new T[newLength];
-        std::copy(items.getValue(), items.getValue() + length, newItems);
-        for (size_t i = 0; i < other.size(); ++i) {
-            newItems[length + i] = other.get(i);
+    ArraySequence<T> *getSubsequence(int start, int end) override {
+        auto *buf = new DynamicArray<T>();
+        for (int i = start; i < end; i++) {
+            (*buf).add((*items)[i]);
         }
-        return new ArraySequence(newItems, newLength);
+        auto *arr = new ArraySequence<T>(*buf);
+        return arr;
+    };
+
+    ArraySequence<T> *append(T value) override {
+        DynamicArray<T> *nItems = new DynamicArray((*items));
+        (*nItems).add(value);
+        auto *buf = new ArraySequence<T>(*nItems);
+        return buf;
+    };
+
+    ArraySequence<T> *prepend(T value) override {
+        DynamicArray<T> *nItems = new DynamicArray(1, new T[]{value});
+        for (int i = 0; i < getLength(); i++) {
+            nItems->add((*items)[i]);
+        }
+        auto *buf = new ArraySequence<T>(*nItems);
+        return buf;
+    };
+
+    ArraySequence<T> *insertAt(int index, T value) override {
+        DynamicArray<T> *nItems = new DynamicArray((*items));
+        (*nItems).set(index, value);
+        auto *buf = new ArraySequence<T>(*nItems);
+        return buf;
+    };
+
+    ArraySequence<T> *concat(Sequence<T> *list) override {
+        auto *buf = new DynamicArray<T>();
+        for (int i = 0; i < getLength(); i++) {
+            (*buf).add((*items)[i]);
+        }
+        for (int i = 0; i < (*list).getLength(); i++) {
+            (*buf).add((*list)[i]);
+        }
+        auto *processed = new ArraySequence<T>(*buf);
+        return processed;
+    };
+
+    ArraySequence<T> *operator+(Sequence<T> *list) override {
+        return concat(list);
     }
 
-    void sort() {
-        std::sort(items.getValue(), items.getValue() + length);
+    void print() {
+        items->println();
     }
 };
 
-#endif // LAB2_ARRAYSEQUENCE_H
+#endif //LAB2_ARRAYSEQUENCE_H

@@ -5,7 +5,7 @@
 #include "../testClasses/Person.h"
 #include "../../collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
 
-class InteractiveTestSuite {
+class InteractiveTestSuiteArray {
 public:
     static MutableArraySequenceUnqPtr<Person>* generateTestData(size_t count);
 

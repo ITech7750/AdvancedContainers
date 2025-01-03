@@ -7,7 +7,6 @@
 
 class Person {
 public:
-    // Поля класса
     std::string firstName;
     std::string lastName;
     int age;
@@ -19,21 +18,32 @@ public:
     std::string email;
     std::string jobTitle;
 
-    // Конструктор
+    // Конструктор по умолчанию
+    Person()
+        : firstName("Unknown"),
+          lastName("Unknown"),
+          age(0),
+          address("Unknown"),
+          height(0.0),
+          weight(0.0),
+          yearOfBirth(0),
+          phoneNumber("Unknown"),
+          email("Unknown"),
+          jobTitle("Unknown") {}
+
     Person(std::string fn, std::string ln, int age, std::string addr, double h, double w, int yob,
            std::string phone, std::string email, std::string job)
-            : firstName(std::move(fn)),
-              lastName(std::move(ln)),
-              age(age),
-              address(std::move(addr)),
-              height(h),
-              weight(w),
-              yearOfBirth(yob),
-              phoneNumber(std::move(phone)),
-              email(std::move(email)),
-              jobTitle(std::move(job)) {}
+        : firstName(std::move(fn)),
+          lastName(std::move(ln)),
+          age(age),
+          address(std::move(addr)),
+          height(h),
+          weight(w),
+          yearOfBirth(yob),
+          phoneNumber(std::move(phone)),
+          email(std::move(email)),
+          jobTitle(std::move(job)) {}
 
-    // Метод для строкового представления
     std::string toString() const {
         std::ostringstream oss;
         oss << firstName << " " << lastName
@@ -41,11 +51,12 @@ public:
             << ", Height: " << height
             << ", Weight: " << weight
             << ", Address: " << address
-            << ", Job: " << jobTitle;
+            << ", Job: " << jobTitle
+            << ", Phone: " << phoneNumber
+            << ", Email: " << email;
         return oss.str();
     }
 
-    // Операторы сравнения
     bool operator==(const Person& other) const {
         return firstName == other.firstName &&
                lastName == other.lastName &&

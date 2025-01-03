@@ -22,16 +22,16 @@ public:
 
     T getFirst() {
         return items->getFirst();
-    };
+    }
 
     T getLast() {
         return items->getLast();
-    };
+    }
 
     T get(size_t index) const {
         if (index >= size()) throw IndexOutOfRange();
         return items->get(index);
-    };
+    }
 
     T operator[](size_t index) const {
         return get(index);
@@ -45,13 +45,16 @@ public:
         return items->isEmpty();
     }
 
-    UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) {
-        LinkedListUP<T> *subItems = items->getSublist(start, end);
-        auto subSequence = new MutableListSequence(*subItems);
-        return subSequence;
-    };
+    UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) override {
+        if (start >= size() || end >= size() || start > end) {
+            throw IndexOutOfRange();
+        }
+        LinkedListUP<T>* subItems = items->getSublist(start, end);
+        auto* subSequence = new MutableListSequence(*subItems);
+        return UnqPtr<MutableSequence<T>>(subSequence); // Оборачиваем в UnqPtr
+    }
 
-    UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) {
+    UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) override {
         auto nItems = LinkedListUP<T>();
         for (size_t i = 0; i < size(); i++) {
             nItems.append((*items)[i]);
@@ -59,18 +62,20 @@ public:
         for (size_t i = 0; i < iterable.size(); i++) {
             nItems.append(iterable[i]);
         }
-        auto buf = new MutableListSequence(nItems);
-        return buf;
-    };
+        auto* buf = new MutableListSequence(nItems);
+        return UnqPtr<MutableSequence<T>>(buf); // Оборачиваем в UnqPtr
+    }
 
     MutableListSequence<T> operator+(const Iterable<T> &iterable) {
-        return concat(iterable);
+        return *concat(iterable);
     }
 
     MutableListSequence<T>& operator=(const MutableListSequence<T>& other) {
-        items->removeAll();
-        for (size_t i = 0;i<other.size();i++) {
-            items->append(other.get(i));
+        if (this != &other) {
+            items->removeAll();
+            for (size_t i = 0; i < other.size(); i++) {
+                items->append(other.get(i));
+            }
         }
         return *this;
     }
@@ -83,16 +88,15 @@ public:
 
     void append(T value) override {
         items->append(value);
-    };
+    }
 
     void prepend(T value) override {
         items->prepend(value);
-    };
+    }
 
     void insertAt(size_t index, T value) override {
         items->insertAt(index, value);
-    };
+    }
 };
-
 
 #endif //LAB2_MUTABLELISTSEQUENCE_H

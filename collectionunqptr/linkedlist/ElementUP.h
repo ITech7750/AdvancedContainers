@@ -5,7 +5,7 @@
 #include "../../pointer/UnqPtr.h"
 #include "../../pointer/ShrdPtr.h"
 
-
+//1
 template<class T>
 class ElementUP {
 private:

@@ -1,5 +1,4 @@
 #include "TestDataManagerArray.h"
-#include <iostream>
 #include <fstream>
 #include <random>
 #include <sstream>
@@ -8,9 +7,8 @@
 
 using json = nlohmann::json;
 
-MutableArraySequenceUnqPtr<Person>* TestDataManager::generateTestData(size_t count) {
-    auto list = new MutableArraySequenceUnqPtr<Person>();
-
+MutableArraySequenceUnqPtr<Person>* TestDataManagerArray::generateTestData(size_t count) {
+    auto array = new MutableArraySequenceUnqPtr<Person>();
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> ageDist(18, 65);
@@ -18,95 +16,106 @@ MutableArraySequenceUnqPtr<Person>* TestDataManager::generateTestData(size_t cou
     std::uniform_real_distribution<> weightDist(50.0, 100.0);
 
     for (size_t i = 0; i < count; ++i) {
-        list->append(Person(
-                "FirstName" + std::to_string(i),
-                "LastName" + std::to_string(i),
-                ageDist(gen),
-                "Address " + std::to_string(i),
-                heightDist(gen),
-                weightDist(gen),
-                2000 - ageDist(gen),
-                "123-456-" + std::to_string(i),
-                "email" + std::to_string(i) + "@example.com",
-                "JobTitle" + std::to_string(i)
+        array->append(Person(
+            "FirstName" + std::to_string(i),
+            "LastName" + std::to_string(i),
+            ageDist(gen),
+            "Address " + std::to_string(i),
+            heightDist(gen),
+            weightDist(gen),
+            2000 - ageDist(gen),
+            "123-456-" + std::to_string(i),
+            "email" + std::to_string(i) + "@example.com",
+            "JobTitle" + std::to_string(i)
         ));
     }
 
-    return list;
+    return array;
 }
 
-void TestDataManager::saveToJson(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename) {
+void TestDataManagerArray::saveToJson(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename) {
     json j;
     for (size_t i = 0; i < data.size(); ++i) {
-        const Person& p = data.get(i);
+        const Person& p = data.get(i); // Убедитесь, что get возвращает ссылку
         j.push_back({
-                            {"firstName", p.firstName},
-                            {"lastName", p.lastName},
-                            {"age", p.age},
-                            {"address", p.address},
-                            {"height", p.height},
-                            {"weight", p.weight},
-                            {"yearOfBirth", p.yearOfBirth},
-                            {"phoneNumber", p.phoneNumber},
-                            {"email", p.email},
-                            {"jobTitle", p.jobTitle}
-                    });
+            {"firstName", p.firstName},
+            {"lastName", p.lastName},
+            {"age", p.age},
+            {"address", p.address},
+            {"height", p.height},
+            {"weight", p.weight},
+            {"yearOfBirth", p.yearOfBirth},
+            {"phoneNumber", p.phoneNumber},
+            {"email", p.email},
+            {"jobTitle", p.jobTitle}
+        });
     }
     std::ofstream file(filename);
+    if (!file.is_open()) {
+        throw std::ios_base::failure("Failed to open file for saving JSON");
+    }
     file << j.dump(4);
-    file.close();
 }
 
-MutableArraySequenceUnqPtr<Person>* TestDataManager::loadFromJson(const std::string& filename) {
+MutableArraySequenceUnqPtr<Person>* TestDataManagerArray::loadFromJson(const std::string& filename) {
     if (!std::filesystem::exists(filename)) {
-        auto generatedData = generateTestData(10); // Генерируем 10 записей.
+        auto generatedData = generateTestData(10);
         saveToJson(*generatedData, filename);
         return generatedData;
     }
 
     std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::ios_base::failure("Failed to open JSON file for loading");
+    }
+
     json j;
     file >> j;
-    file.close();
 
-    auto list = new MutableArraySequenceUnqPtr<Person>();
+    auto array = new MutableArraySequenceUnqPtr<Person>();
     for (const auto& item : j) {
-        list->append(Person(
-                item["firstName"],
-                item["lastName"],
-                item["age"],
-                item["address"],
-                item["height"],
-                item["weight"],
-                item["yearOfBirth"],
-                item["phoneNumber"],
-                item["email"],
-                item["jobTitle"]
+        array->append(Person(
+            item["firstName"],
+            item["lastName"],
+            item["age"],
+            item["address"],
+            item["height"],
+            item["weight"],
+            item["yearOfBirth"],
+            item["phoneNumber"],
+            item["email"],
+            item["jobTitle"]
         ));
     }
-    return list;
+    return array;
 }
 
-void TestDataManager::saveToTxt(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename) {
+void TestDataManagerArray::saveToTxt(const MutableArraySequenceUnqPtr<Person>& data, const std::string& filename) {
     std::ofstream file(filename);
+    if (!file.is_open()) {
+        throw std::ios_base::failure("Failed to open file for saving text data");
+    }
     for (size_t i = 0; i < data.size(); ++i) {
-        const Person& p = data.get(i);
+        const Person& p = data.get(i); // Убедитесь, что get возвращает ссылку
         file << p.firstName << "," << p.lastName << "," << p.age << "," << p.address << ","
              << p.height << "," << p.weight << "," << p.yearOfBirth << ","
              << p.phoneNumber << "," << p.email << "," << p.jobTitle << "\n";
     }
-    file.close();
 }
 
-MutableArraySequenceUnqPtr<Person>* TestDataManager::loadFromTxt(const std::string& filename) {
+MutableArraySequenceUnqPtr<Person>* TestDataManagerArray::loadFromTxt(const std::string& filename) {
     if (!std::filesystem::exists(filename)) {
-        auto generatedData = generateTestData(10); // Генерируем 10 записей.
+        auto generatedData = generateTestData(10);
         saveToTxt(*generatedData, filename);
         return generatedData;
     }
 
     std::ifstream file(filename);
-    auto list = new MutableArraySequenceUnqPtr<Person>();
+    if (!file.is_open()) {
+        throw std::ios_base::failure("Failed to open text file for loading");
+    }
+
+    auto array = new MutableArraySequenceUnqPtr<Person>();
     std::string line;
     while (std::getline(file, line)) {
         std::istringstream ss(line);
@@ -125,8 +134,7 @@ MutableArraySequenceUnqPtr<Person>* TestDataManager::loadFromTxt(const std::stri
         std::getline(ss, email, ',');
         std::getline(ss, job, ',');
 
-        list->append(Person(fn, ln, age, addr, height, weight, yob, phone, email, job));
+        array->append(Person(fn, ln, age, addr, height, weight, yob, phone, email, job));
     }
-    file.close();
-    return list;
+    return array;
 }

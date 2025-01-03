@@ -1,11 +1,11 @@
-#ifndef INTERACTIVE_TEST_SUITE_H
-#define INTERACTIVE_TEST_SUITE_H
+#ifndef INTERACTIVE_TEST_SUITE_LIST_H
+#define INTERACTIVE_TEST_SUITE_LIST_H
 
 #include <string>
 #include "../testClasses/Person.h"
 #include "../../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
 
-class InteractiveTestSuite {
+class InteractiveTestSuiteList {
 public:
     static MutableListSequenceUnqPtr<Person>* generateTestData(size_t count);
 

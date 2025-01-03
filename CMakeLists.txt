@@ -24,12 +24,12 @@ add_executable(Pointers
         test/pointerTests/smrt/SmrtPtrTests.cpp
         test/pointerTests/shrd/ShrdPtrTests.cpp
         test/helper/TestHelpers.cpp
-        test/helper/TestDataManager.cpp
-        test/sorts/DataTestSuite.cpp
-        test/sorts/InteractiveTestSuite.cpp
-        "collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
-        collectionunqptr/sequence/arraysequence/ArraySequence.h
-        collectionunqptr/dinamicarray/DynamicArrayUP.h
+        test/helper/TestDataManagerList.cpp
+        test/helper/TestDataManagerArray.cpp
+        test/sorts/InteractiveTestSuiteList.cpp
+        test/sorts/InteractiveTestSuiteArray.cpp
+        test/sorts/DataTestSuiteArray.cpp
+        test/sorts/DataTestSuiteList.cpp
 )
 
 target_link_libraries(Pointers nlohmann_json::nlohmann_json)

@@ -30,6 +30,10 @@ add_executable(Pointers
         test/sorts/InteractiveTestSuiteArray.cpp
         test/sorts/DataTestSuiteArray.cpp
         test/sorts/DataTestSuiteList.cpp
+        test/array/DynamicArrayTests.h
+        test/array/DynamicArrayTests.cpp
+        test/mutableArraySeq/MutableArraySequenceUnqPtrTests.h
+        test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
 )
 
 target_link_libraries(Pointers nlohmann_json::nlohmann_json)

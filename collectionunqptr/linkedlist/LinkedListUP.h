@@ -178,6 +178,18 @@ public:
         _length--;
     }
 
+    void set(size_t index, T value) {
+        if (index >= _length || index < 0) {
+            throw IndexOutOfRange();
+        }
+
+        ShrdPtr<ElementUP<T>> buf(&_first);
+        for (size_t i = 0; i < index; i++) {
+            buf = buf->getNext();
+        }
+        buf->set(value);
+    }
+
     void removeAll() {
         _clear_();
     }

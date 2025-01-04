@@ -1,5 +1,5 @@
-#ifndef LAB2_SORTERSERVICE_H
-#define LAB2_SORTERSERVICE_H
+#ifndef LAB2_SORTERSERVICE_ARRAY_H
+#define LAB2_SORTERSERVICE_ARRAY_H
 
 #include "SorterFactory.h"
 #include "../collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 template<typename T>
-class SorterService {
+class SorterServiceArray {
 public:
     static void sort(
              MutableArraySequenceUnqPtr<T>& seq,

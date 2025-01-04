@@ -18,11 +18,13 @@ public:
 
     virtual void insertAt(size_t index, T item) = 0;
 
+    virtual void set(size_t index, T value) = 0;
+
     virtual void operator+=(const Iterable<T> &list) = 0;
 
     virtual UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) = 0;
 
-    virtual   UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) = 0;
+    virtual UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) = 0;
 
 };
 

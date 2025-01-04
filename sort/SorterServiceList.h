@@ -1,5 +1,5 @@
-#ifndef LAB2_SORTERSERVICE_H
-#define LAB2_SORTERSERVICE_H
+#ifndef LAB2_SORTERSERVICE_LIST_H
+#define LAB2_SORTERSERVICE_LIST_H
 
 #include "SorterFactory.h"
 #include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 template<typename T>
-class SorterService {
+class SorterServiceList {
 public:
     static void sort(
             MutableListSequenceUnqPtr<T>& seq,

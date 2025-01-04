@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include "../../pointer/UnqPtr.h"
 #include "../../util/exception/IndexOutOfRange.h"
 
@@ -15,16 +16,17 @@ private:
 
     void ensureCapacity(size_t minCapacity) {
         if (_capacity < minCapacity) {
-            resize(std::max(minCapacity, _capacity * 2)); // Удвоение емкости для эффективного роста
+            size_t newCapacity = std::max(minCapacity, _capacity * 2);
+            resize(newCapacity); // Удвоение емкости для эффективного роста
         }
     }
 
 public:
     DynamicArray() : _capacity(1), _size(0), _items(UnqPtr<T[]>(new T[1])) {}
 
-    DynamicArray(size_t count, T* items)
+    DynamicArray(size_t count, const T* items)
         : _capacity(count), _size(count), _items(UnqPtr<T[]>(new T[count])) {
-        std::move(items, items + count, _items.getValue());
+        std::copy(items, items + count, _items.getValue());
     }
 
     explicit DynamicArray(size_t size)
@@ -56,11 +58,25 @@ public:
         return _size;
     }
 
+    size_t capacity() const {
+        return _capacity;
+    }
+
     bool isEmpty() const {
         return _size == 0;
     }
 
     const T& get(size_t index) const {
+        if (index >= _size) throw IndexOutOfRange();
+        return _items.getValue()[index];
+    }
+
+    T& operator[](size_t index) {
+        if (index >= _size) throw IndexOutOfRange();
+        return _items.getValue()[index];
+    }
+
+    const T& operator[](size_t index) const {
         if (index >= _size) throw IndexOutOfRange();
         return _items.getValue()[index];
     }
@@ -85,7 +101,9 @@ public:
     void insertAt(size_t index, T value) {
         if (index > _size) throw IndexOutOfRange();
         ensureCapacity(_size + 1);
-        std::move_backward(_items.getValue() + index, _items.getValue() + _size, _items.getValue() + _size + 1);
+        if (index < _size) {
+            std::move_backward(_items.getValue() + index, _items.getValue() + _size, _items.getValue() + _size + 1);
+        }
         _items.getValue()[index] = std::move(value);
         ++_size;
     }
@@ -98,11 +116,26 @@ public:
         _capacity = newCapacity;
     }
 
+    void shrink_to_fit() {
+        if (_capacity > _size) {
+            resize(_size);
+        }
+    }
+
+    T* getRawPointer() {
+        return _items.getValue();
+    }
+
+    const T* getRawPointer() const {
+        return _items.getValue();
+    }
+
+
     UnqPtr<DynamicArray<T>> getSubarray(size_t start, size_t end) const {
         if (start >= _size || end > _size || start > end) throw IndexOutOfRange();
         size_t newSize = end - start;
         auto subArray = UnqPtr<DynamicArray<T>>(new DynamicArray<T>(newSize));
-        std::move(_items.getValue() + start, _items.getValue() + end, subArray->_items.getValue());
+        std::copy(_items.getValue() + start, _items.getValue() + end, subArray->_items.getValue());
         subArray->_size = newSize;
         return subArray;
     }
@@ -110,6 +143,17 @@ public:
     void swap(size_t index1, size_t index2) {
         if (index1 >= _size || index2 >= _size) throw IndexOutOfRange();
         std::swap(_items.getValue()[index1], _items.getValue()[index2]);
+    }
+
+    void clear() {
+        _size = 0;
+    }
+
+    void print() const {
+        for (size_t i = 0; i < _size; ++i) {
+            std::cout << _items.getValue()[i] << " ";
+        }
+        std::cout << std::endl;
     }
 };
 

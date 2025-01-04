@@ -14,18 +14,31 @@ MutableArraySequenceUnqPtr<Person>* TestDataManagerArray::generateTestData(size_
     std::uniform_int_distribution<> ageDist(18, 65);
     std::uniform_real_distribution<> heightDist(150.0, 200.0);
     std::uniform_real_distribution<> weightDist(50.0, 100.0);
+    std::uniform_int_distribution<> nameCharDist('A', 'Z');
+    std::uniform_int_distribution<> nameLengthDist(5, 10);
+
+    auto generateRandomString = [&](size_t length) {
+        std::string result;
+        for (size_t i = 0; i < length; ++i) {
+            result += static_cast<char>(nameCharDist(gen));
+        }
+        return result;
+    };
 
     for (size_t i = 0; i < count; ++i) {
+        std::string firstName = generateRandomString(nameLengthDist(gen));
+        std::string lastName = generateRandomString(nameLengthDist(gen));
+
         array->append(Person(
-            "FirstName" + std::to_string(i),
-            "LastName" + std::to_string(i),
+            firstName,
+            lastName,
             ageDist(gen),
             "Address " + std::to_string(i),
             heightDist(gen),
             weightDist(gen),
             2000 - ageDist(gen),
-            "123-456-" + std::to_string(i),
-            "email" + std::to_string(i) + "@example.com",
+            "123-456-" + std::to_string(rd() % 10000),
+            firstName + lastName + "@example.com",
             "JobTitle" + std::to_string(i)
         ));
     }

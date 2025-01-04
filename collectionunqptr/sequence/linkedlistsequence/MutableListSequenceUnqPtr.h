@@ -98,6 +98,10 @@ public:
     void insertAt(size_t index, T value) override {
         items->insertAt(index, value);
     };
+
+    void set(size_t index, T value) override {
+        items->set(index, value);
+    }
 };
 
 

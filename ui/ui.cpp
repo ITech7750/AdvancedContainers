@@ -12,6 +12,8 @@
 #include "../test/sorts/InteractiveTestSuiteArray.h"
 #include "../test/sorts/DataTestSuiteList.h"
 #include "../test/sorts/InteractiveTestSuiteList.h"
+#include "../test/array/DynamicArrayTests.h"
+#include "../test/mutableArraySeq/MutableArraySequenceUnqPtrTests.h"
 #include <iostream>
 
 
@@ -49,18 +51,28 @@ void runPointerTestsUI() {
 void runSequenceTestsUI() {
     int choice;
     std::cout << "\n=== Меню тестов последовательностей ===\n";
-    std::cout << "1. Тест мутабельной последовательности\n";
-    std::cout << "2. Нагрузочные тесты с корректируемой нагрузкой\n";
-    std::cout << "3. Нагрузочные тесты\n";
+    std::cout << "1. Тесты мутабельной последовательности на List\n";
+    std::cout << "2. Тесты мутабельной последовательности на Array\n";
+    std::cout << "3. Тесты Array\n";
+    std::cout << "4. Нагрузочные тесты с корректируемой нагрузкой\n";
+    std::cout << "5. Нагрузочные тесты\n";
     std::cout << "0. Вернуться в главное меню\n";
     std::cout << "Введите ваш выбор: ";
     std::cin >> choice;
     switch (choice) {
         case 1:
-            std::cout << "Запуск теста мутабельной последовательности...\n";
+            std::cout << "Запуск теста мутабельной последовательности на базу List...\n";
             mutableListSequenceTests();
             break;
-        case 2: {
+        case 2:
+            std::cout << "Запуск теста мутабельной последовательности на базу Array...\n";
+            MutableArraySequenceUnqPtrTests::runAllTests();
+        break;
+        case 3:
+            std::cout << "Запуск тестов array...\n";
+            DynamicArrayTests::runAllTests();
+        break;
+        case 4: {
             int k;
             std::cout << "Введите степень числа элементов (10^k): ";
             std::cin >> k;
@@ -68,7 +80,7 @@ void runSequenceTestsUI() {
             //std::cout << loadTestSeq(k) << "\n";
             break;
         }
-        case 3:
+        case 5:
             std::cout << "Запуск нагрузочных тестов...\n";
             loadTests();
             break;
@@ -112,7 +124,7 @@ void runCreateUIList() {
         std::cout << "Введите имя файла (или оставьте пустым для имени по умолчанию): ";
         std::getline(std::cin, filename);
         if (filename.empty()) {
-            filename = (formatChoice == 1) ? "test/result/data.json" : "test/result/data.txt";
+            filename = (formatChoice == 1) ? "../test/result/data.json" : "../test/result/data.txt";
         }
         try {
             data = testSuite.loadTestData(formatChoice, filename);
@@ -167,7 +179,7 @@ void runCreateUIArray() {
         std::cout << "Введите имя файла (или оставьте пустым для имени по умолчанию): ";
         std::getline(std::cin, filename);
         if (filename.empty()) {
-            filename = (formatChoice == 1) ? "test/result/data.json" : "test/result/data.txt";
+            filename = (formatChoice == 1) ? "../test/result/data.json" : "../test/result/data.txt";
         }
         try {
             data = testSuite.loadTestData(formatChoice, filename);
@@ -208,10 +220,10 @@ void runSortTestsUIArray() {
 
         switch (choice) {
             case 1:
-                testSuiteArray.testSortByAgeFromFile("test/result/data.json", true);
+                testSuiteArray.testSortByAgeFromFile("../test/result/data.json", true);
                 break;
             case 2:
-                testSuiteArray.testSortByNameFromFile("test/result/data.txt", false);
+                testSuiteArray.testSortByNameFromFile("../test/result/data.txt", false);
                 break;
             case 3: {
                 size_t dataSize;
@@ -266,10 +278,10 @@ void runSortTestsUIList() {
 
         switch (choice) {
             case 1:
-                testSuiteList.testSortByAgeFromFile("test/result/data.json", true);
+                testSuiteList.testSortByAgeFromFile("../test/result/data.json", true);
                 break;
             case 2:
-                testSuiteList.testSortByNameFromFile("test/result/data.txt", false);
+                testSuiteList.testSortByNameFromFile("../test/result/data.txt", false);
                 break;
             case 3: {
                 size_t dataSize;

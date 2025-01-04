@@ -8,9 +8,10 @@ class BaseSorter : public ISorter<T> {
 protected:
     void swap(MutableSequence<T>* seq, int i, int j) {
         T temp = seq->get(i);
-        seq->insertAt(i, seq->get(j));
-        seq->insertAt(j, temp);
+        seq->set(i, seq->get(j));
+        seq->set(j, temp);
     }
+
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "DataTestSuiteList.h"
 #include "../helper/TestDataManagerList.h"
-#include "../../sort/SorterService.h"
+#include "../../sort/SorterServiceList.h"
 #include <iostream>
 #include <cassert>
 #include <vector>
@@ -9,7 +9,7 @@ void DataTestSuiteList::testSortByAgeFromFile(const std::string& filename, bool 
     auto data = isJson ? TestDataManagerList::loadFromJson(filename)
                        : TestDataManagerList::loadFromTxt(filename);
 
-    SorterService<Person>::sort(*data, compareByAge, "quick");
+    SorterServiceList<Person>::sort(*data, compareByAge, "quick");
 
     for (size_t i = 1; i < data->size(); ++i) {
         assert(data->get(i - 1).age <= data->get(i).age);
@@ -23,7 +23,7 @@ void DataTestSuiteList::testSortByNameFromFile(const std::string& filename, bool
     auto data = isJson ? TestDataManagerList::loadFromJson(filename)
                        : TestDataManagerList::loadFromTxt(filename);
 
-    SorterService<Person>::sort(*data, compareByName, "bubble");
+    SorterServiceList<Person>::sort(*data, compareByName, "bubble");
 
     for (size_t i = 1; i < data->size(); ++i) {
         assert(data->get(i - 1).firstName <= data->get(i).firstName);
@@ -36,7 +36,7 @@ void DataTestSuiteList::testSortByNameFromFile(const std::string& filename, bool
 void DataTestSuiteList::testSortByAgeGenerated(size_t dataSize) {
     auto data = TestDataManagerList::generateTestData(dataSize);
 
-    SorterService<Person>::sort(*data, compareByAge, "insertion");
+    SorterServiceList<Person>::sort(*data, compareByAge, "insertion");
 
     for (size_t i = 1; i < data->size(); ++i) {
         assert(data->get(i - 1).age <= data->get(i).age);
@@ -49,7 +49,7 @@ void DataTestSuiteList::testSortByAgeGenerated(size_t dataSize) {
 void DataTestSuiteList::testSortByNameGenerated(size_t dataSize) {
     auto data = TestDataManagerList::generateTestData(dataSize);
 
-    SorterService<Person>::sort(*data, compareByName, "heap");
+    SorterServiceList<Person>::sort(*data, compareByName, "heap");
 
     for (size_t i = 1; i < data->size(); ++i) {
         assert(data->get(i - 1).firstName <= data->get(i).firstName);
@@ -66,11 +66,22 @@ void DataTestSuiteList::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     auto dataInsertion = TestDataManagerList::generateTestData(dataSize);
     auto dataHeap = TestDataManagerList::generateTestData(dataSize);
 
-    double quickSortTime = SorterService<Person>::measureSortTime(*dataQuick, compareByAge, "quick");
-    double mergeSortTime = SorterService<Person>::measureSortTime(*dataMerge, compareByAge, "merge");
-    double bubbleSortTime = SorterService<Person>::measureSortTime(*dataBubble, compareByAge, "bubble");
-    double insertionSortTime = SorterService<Person>::measureSortTime(*dataInsertion, compareByAge, "insertion");
-    double heapSortTime = SorterService<Person>::measureSortTime(*dataHeap, compareByAge, "heap");
+    std::cout << "Before sort:\n";
+    for (size_t i = 0; i < dataQuick->size(); ++i) {
+        std::cout << dataQuick->get(i).firstName << "\n";
+    }
+
+
+    double quickSortTime = SorterServiceList<Person>::measureSortTime(*dataQuick, compareByAge, "quick");
+    double mergeSortTime = SorterServiceList<Person>::measureSortTime(*dataMerge, compareByAge, "merge");
+    double bubbleSortTime = SorterServiceList<Person>::measureSortTime(*dataBubble, compareByAge, "bubble");
+    double insertionSortTime = SorterServiceList<Person>::measureSortTime(*dataInsertion, compareByAge, "insertion");
+    double heapSortTime = SorterServiceList<Person>::measureSortTime(*dataHeap, compareByAge, "heap");
+
+    std::cout << "After sort:\n";
+    for (size_t i = 0; i < dataQuick->size(); ++i) {
+        std::cout << dataQuick->get(i).firstName << "\n";
+    }
 
     delete dataQuick;
     delete dataMerge;
@@ -80,8 +91,8 @@ void DataTestSuiteList::testSortPerformanceForAllAlgorithms(size_t dataSize) {
 }
 
 void DataTestSuiteList::runAllTests() {
-    testSortByAgeFromFile("data.json", true);
-    testSortByNameFromFile("data.txt", false);
+    testSortByAgeFromFile("../result/data.json", true);
+    testSortByNameFromFile("../result/data.json", false);
 
     std::vector<size_t> sizes = {10, 100, 1000, 10000};
     for (size_t size : sizes) {

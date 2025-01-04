@@ -10,7 +10,8 @@ private:
     UnqPtr<DynamicArray<T>> items;
 public:
     MutableArraySequenceUnqPtr() : items(UnqPtr<DynamicArray<T>>(new DynamicArray<T>())) {}
-
+    MutableArraySequenceUnqPtr(MutableArraySequenceUnqPtr&&) noexcept = default;
+    MutableArraySequenceUnqPtr& operator=(MutableArraySequenceUnqPtr&&) noexcept = default;
     MutableArraySequenceUnqPtr(T *_items, size_t count)
         : items(UnqPtr<DynamicArray<T>>(new DynamicArray<T>(count, _items))) {}
 
@@ -22,6 +23,22 @@ public:
         for (size_t i = 0; i < sequence.size(); i++) {
             items->add(sequence.get(i));
         }
+    }
+
+    T* begin() {
+        return items->getRawPointer();
+    }
+
+    T* end() {
+        return items->getRawPointer() + items->size();
+    }
+
+    const T* begin() const {
+        return items->getRawPointer();
+    }
+
+    const T* end() const {
+        return items->getRawPointer() + items->size();
     }
 
     T getFirst() override {
@@ -43,6 +60,7 @@ public:
     bool isEmpty() override {
         return items->isEmpty();
     }
+
 
     UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) override {
         if (start >= size() || end > size() || start > end) {
@@ -79,6 +97,10 @@ public:
 
     void insertAt(size_t index, T value) override {
         items->insertAt(index, value);
+    }
+
+    void set(size_t index, T value) override {
+        items->set(index, value);
     }
 };
 

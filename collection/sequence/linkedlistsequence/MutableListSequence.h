@@ -45,6 +45,10 @@ public:
         return items->isEmpty();
     }
 
+    void set(size_t index, T value) override {
+        items->set(index, value);
+    }
+
     UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) override {
         if (start >= size() || end >= size() || start > end) {
             throw IndexOutOfRange();

@@ -1,7 +1,6 @@
 #ifndef LAB2_ISORTER_H
 #define LAB2_ISORTER_H
 
-
 #include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
 
 template<typename T>

@@ -3,8 +3,8 @@
 
 #include "../BaseSorter.h"
 #include <stdexcept>
-#include <iostream>
 
+#include <iostream>
 template<typename T>
 class MergeSorter : public BaseSorter<T> {
 public:
@@ -25,41 +25,25 @@ private:
     }
 
     void merge(MutableSequence<T>* seq, int left, int mid, int right, int (*cmp)(const T&, const T&)) {
-        if (!seq || left < 0 || right >= seq->size() || left > mid || mid > right) {
-            throw std::runtime_error("Invalid parameters in merge");
-        }
-
         auto leftSeq = seq->getSubsequence(left, mid);
         auto rightSeq = seq->getSubsequence(mid + 1, right);
 
         int i = 0, j = 0, k = left;
 
         while (i < leftSeq->size() && j < rightSeq->size()) {
-            try {
-                if (cmp(leftSeq->get(i), rightSeq->get(j)) <= 0) {
-                    seq->operator[](k++) = leftSeq->get(i++);
-                } else {
-                    seq->operator[](k++) = rightSeq->get(j++);
-                }
-            } catch (const std::out_of_range& e) {
-                throw std::runtime_error("Index out of range during merge operation");
+            if (cmp(leftSeq->get(i), rightSeq->get(j)) <= 0) {
+                seq->set(k++, leftSeq->get(i++));
+            } else {
+                seq->set(k++, rightSeq->get(j++));
             }
         }
 
         while (i < leftSeq->size()) {
-            try {
-                seq->operator[](k++) = leftSeq->get(i++);
-            } catch (const std::out_of_range& e) {
-                throw std::runtime_error("Index out of range during merge operation");
-            }
+            seq->set(k++, leftSeq->get(i++));
         }
 
         while (j < rightSeq->size()) {
-            try {
-                seq->operator[](k++) = rightSeq->get(j++);
-            } catch (const std::out_of_range& e) {
-                throw std::runtime_error("Index out of range during merge operation");
-            }
+            seq->set(k++, rightSeq->get(j++));
         }
     }
 };

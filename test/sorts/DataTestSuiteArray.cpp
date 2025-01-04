@@ -8,26 +8,24 @@
 void DataTestSuiteArray::testSortByAgeFromFile(const std::string& filename, bool isJson) {
     auto data = isJson ? TestDataManagerArray::loadFromJson(filename)
                        :TestDataManagerArray::loadFromTxt(filename);
-    std::cout << "Before sort:\n";
+    /*std::cout << "Before sort:\n";
     for (size_t i = 0; i < data->size(); ++i) {
-        std::cout << data->get(i).firstName << "\n";
-    }
+        std::cout << data->get(i).firstName << " (" << data->get(i).age << ")\n";
+    }*/
+
     SorterServiceArray<Person>::sort(*data, compareByAge, "quick");
     //std::sort(data->begin(), data->end(), compareByAge);
 
-    std::cout << "After sort:\n";
+    /*std::cout << "After sort:\n";
     for (size_t i = 0; i < data->size(); ++i) {
-        std::cout << data->get(i).firstName << "\n";
-    }
+        std::cout << data->get(i).firstName << " (" << data->get(i).age << ")\n";
+    }*/
 
 
     for (size_t i = 1; i < data->size(); ++i) {
-        if (!(data->get(i - 1).firstName <= data->get(i).firstName)) {
-            std::cerr << "Sort failed: " << data->get(i - 1).firstName
-                      << " > " << data->get(i).firstName << "\n";
-        }
-        assert(data->get(i - 1).firstName <= data->get(i).firstName);
+        assert(data->get(i - 1).age <= data->get(i).age);
     }
+
 
 
     std::cout << "testSortByAgeFromFile passed for file: " << filename << "\n";
@@ -81,10 +79,10 @@ void DataTestSuiteArray::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     auto dataInsertion = TestDataManagerArray::generateTestData(dataSize);
     auto dataHeap = TestDataManagerArray::generateTestData(dataSize);
 
-    std::cout << "Before sort:\n";
+    /*std::cout << "Before sort:\n";
     for (size_t i = 0; i < dataQuick->size(); ++i) {
         std::cout << dataQuick->get(i).firstName << "\n";
-    }
+    }*/
 
     double quickSortTime = SorterServiceArray<Person>::measureSortTime(*dataQuick, compareByAge, "quick");
     double mergeSortTime = SorterServiceArray<Person>::measureSortTime(*dataMerge, compareByAge, "merge");
@@ -92,10 +90,10 @@ void DataTestSuiteArray::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     double insertionSortTime = SorterServiceArray<Person>::measureSortTime(*dataInsertion, compareByAge, "insertion");
     double heapSortTime = SorterServiceArray<Person>::measureSortTime(*dataHeap, compareByAge, "heap");
 
-    std::cout << "After sort:\n";
+    /*std::cout << "After sort:\n";
     for (size_t i = 0; i < dataQuick->size(); ++i) {
         std::cout << dataQuick->get(i).firstName << "\n";
-    }
+    }*/
 
     delete dataQuick;
     delete dataMerge;
@@ -106,13 +104,13 @@ void DataTestSuiteArray::testSortPerformanceForAllAlgorithms(size_t dataSize) {
 }
 
 void DataTestSuiteArray::runAllTests() {
-    testSortByAgeFromFile("../result/data.json", true);
-    testSortByNameFromFile("../result/data.json", false);
+    testSortByAgeFromFile("data.json", true);
+    testSortByNameFromFile("data.txt", false);
 
-    std::vector<size_t> sizes = {10, 100, 1000, 10000};
-    for (size_t size : sizes) {
-        testSortByAgeGenerated(size);
-        testSortByNameGenerated(size);
-        testSortPerformanceForAllAlgorithms(size);
+    DynamicArray<size_t> sizes = {10, 100, 1000, 10000};
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        testSortByAgeGenerated(sizes.get(i));
+        testSortByNameGenerated(sizes.get(i));
+        testSortPerformanceForAllAlgorithms(sizes.get(i));
     }
 }

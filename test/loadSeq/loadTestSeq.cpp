@@ -1,6 +1,6 @@
 #include "loadTestSeq.h"
-#include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
-#include "loadTests/loadTests.h"
+#include "../../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
+#include "../loadTests/loadTests.h"
 #include <chrono>
 #include <fstream>
 /*

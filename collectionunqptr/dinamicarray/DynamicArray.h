@@ -43,6 +43,12 @@ public:
         other._size = 0;
     }
 
+    DynamicArray(std::initializer_list<T> initList)
+    : _capacity(initList.size()), _size(initList.size()), _items(UnqPtr<T[]>(new T[initList.size()])) {
+        std::copy(initList.begin(), initList.end(), _items.getValue());
+    }
+
+
     DynamicArray<T>& operator=(DynamicArray<T>&& other) noexcept {
         if (this != &other) {
             _capacity = other._capacity;

@@ -3,8 +3,8 @@
 #include "../test/pointerTests/smrt/SmrtPtrTests.h"
 #include "../test/pointerTests/unq/unqPtrTestsAB.h"
 #include "../test/pointerTests/shrd/shrdPtrTestsAB.h"
-#include "../test/TestMutableListSequence.h"
-#include "../test/loadTestSeq.h"
+#include "../test/mutableListSeq/TestMutableListSequence.h"
+#include "../test/loadSeq/loadTestSeq.h"
 #include "../test/loadTests/loadTests.h"
 #include "../test/pointerTests/shrd/ShrdPtrTests.h"
 #include "../test/pointerTests/unq/UnqPtrTests.h"
@@ -319,15 +319,41 @@ void runSortTestsUIList() {
 }
 
 
+
+void runUISorts() {
+    int choice = 0;
+    while (choice != 4) {
+        std::cout << "\n===Меню сортировок===\n";
+        std::cout << "1. Тесты сортировок на MutableListSequenceUnqPtr\n";
+        std::cout << "2. Тесты сортировок на MutableArraySequenceUnqPtr\n";
+        std::cout << "3. Выход\n";
+        std::cout << "Выберите действие: ";
+        std::cin >> choice;
+        switch (choice) {
+            case 1:
+                runSortTestsUIList();
+            break;
+            case 2:
+                runSortTestsUIArray();
+            break;
+            case 3:
+                std::cout << "Завершение программы...\n";
+            break;
+            default:
+                std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+        }
+    }
+}
+
+
 void runUI() {
     int choice = 0;
     while (choice != 4) {
         std::cout << "\n=== Главное меню ===\n";
         std::cout << "1. Тесты указателей\n";
         std::cout << "2. Тесты последовательностей\n";
-        std::cout << "3. Тесты сортировок на MutableListSequenceUnqPtr\n";
-        std::cout << "4. Тесты сортировок на MutableArraySequenceUnqPtr\n";
-        std::cout << "5. Выход\n";
+        std::cout << "3. Тесты сортировок\n";
+        std::cout << "4. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
         switch (choice) {
@@ -338,12 +364,9 @@ void runUI() {
                 runSequenceTestsUI();
                 break;
             case 3:
-                runSortTestsUIList();
+                runUISorts();
                 break;
             case 4:
-                runSortTestsUIArray();
-            break;
-            case 5:
                 std::cout << "Завершение программы...\n";
                 break;
             default:

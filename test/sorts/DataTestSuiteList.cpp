@@ -3,6 +3,7 @@
 #include "../../sort/SorterServiceList.h"
 #include <iostream>
 #include <cassert>
+#include "../../collectionunqptr/dinamicarray/DynamicArray.h"
 #include <vector>
 
 void DataTestSuiteList::testSortByAgeFromFile(const std::string& filename, bool isJson) {
@@ -66,10 +67,10 @@ void DataTestSuiteList::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     auto dataInsertion = TestDataManagerList::generateTestData(dataSize);
     auto dataHeap = TestDataManagerList::generateTestData(dataSize);
 
-    std::cout << "Before sort:\n";
+    /*std::cout << "Before sort:\n";
     for (size_t i = 0; i < dataQuick->size(); ++i) {
         std::cout << dataQuick->get(i).firstName << "\n";
-    }
+    }*/
 
 
     double quickSortTime = SorterServiceList<Person>::measureSortTime(*dataQuick, compareByAge, "quick");
@@ -78,10 +79,10 @@ void DataTestSuiteList::testSortPerformanceForAllAlgorithms(size_t dataSize) {
     double insertionSortTime = SorterServiceList<Person>::measureSortTime(*dataInsertion, compareByAge, "insertion");
     double heapSortTime = SorterServiceList<Person>::measureSortTime(*dataHeap, compareByAge, "heap");
 
-    std::cout << "After sort:\n";
+    /*std::cout << "After sort:\n";
     for (size_t i = 0; i < dataQuick->size(); ++i) {
         std::cout << dataQuick->get(i).firstName << "\n";
-    }
+    }*/
 
     delete dataQuick;
     delete dataMerge;
@@ -91,13 +92,13 @@ void DataTestSuiteList::testSortPerformanceForAllAlgorithms(size_t dataSize) {
 }
 
 void DataTestSuiteList::runAllTests() {
-    testSortByAgeFromFile("../result/data.json", true);
-    testSortByNameFromFile("../result/data.json", false);
+    testSortByAgeFromFile("data.json", true);
+    testSortByNameFromFile("data.json", false);
 
-    std::vector<size_t> sizes = {10, 100, 1000, 10000};
-    for (size_t size : sizes) {
-        testSortByAgeGenerated(size);
-        testSortByNameGenerated(size);
-        testSortPerformanceForAllAlgorithms(size);
+    DynamicArray<size_t> sizes = {10, 100, 1000, 10000};
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        testSortByAgeGenerated(sizes.get(i));
+        testSortByNameGenerated(sizes.get(i));
+        testSortPerformanceForAllAlgorithms(sizes.get(i));
     }
 }

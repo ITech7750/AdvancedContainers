@@ -12,10 +12,10 @@ public:
             T key = seq->get(i);
             int j = i - 1;
             while (j >= 0 && cmp(seq->get(j), key) > 0) {
-                seq->insertAt(j + 1, seq->get(j));
+                seq->set(j + 1, seq->get(j));
                 --j;
             }
-            seq->insertAt(j + 1, key);
+            seq->set(j + 1, key);
         }
     }
 };

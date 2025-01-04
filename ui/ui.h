@@ -8,4 +8,5 @@ void runPointerTestsUI();
 void runCreateUIArray();
 void runCreateUIList();
 void runSequenceTestsUI();
+void runUISorts();
 #endif //LABA1_UI_H

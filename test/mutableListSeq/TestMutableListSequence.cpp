@@ -1,8 +1,8 @@
 #include "TestMutableListSequence.h"
-#include "../collectionunqptr/linkedlist/LinkedListUP.h"
-#include "../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
-#include "../util/tupleUtil.h"
-#include "../test/TestCase.h"
+#include "../../collectionunqptr/linkedlist/LinkedListUP.h"
+#include "../../collectionunqptr/sequence/linkedlistsequence/MutableListSequenceUnqPtr.h"
+#include "../../util/tupleUtil.h"
+#include "../../test/TestCase.h"
 
 
 void mutableListSequenceTests() {

@@ -14,6 +14,8 @@
 #include "../test/sorts/InteractiveTestSuiteList.h"
 #include "../test/array/DynamicArrayTests.h"
 #include "../test/mutableArraySeq/MutableArraySequenceUnqPtrTests.h"
+#include "../test/graph/graphTests.h"
+#include "../test/graph/undirectedGraphTest.h"
 #include <iostream>
 
 
@@ -346,6 +348,32 @@ void runUISorts() {
 }
 
 
+void runUIGraf() {
+    int choice = 0;
+    while (choice != 4) {
+        std::cout << "\n===Меню графов===\n";
+        std::cout << "1. GraphTests\n";
+        std::cout << "2. UndirectedGraphTests\n";
+        std::cout << "3. Выход\n";
+        std::cout << "Выберите действие: ";
+        std::cin >> choice;
+        switch (choice) {
+            case 1:
+                runGraphTests();
+            break;
+            case 2:
+                runUndirectedGraphTests();
+            break;
+            case 3:
+                std::cout << "Завершение программы...\n";
+            break;
+            default:
+                std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+        }
+    }
+}
+
+
 void runUI() {
     int choice = 0;
     while (choice != 4) {
@@ -353,7 +381,8 @@ void runUI() {
         std::cout << "1. Тесты указателей\n";
         std::cout << "2. Тесты последовательностей\n";
         std::cout << "3. Тесты сортировок\n";
-        std::cout << "4. Выход\n";
+        std::cout << "4. Тесты графов\n";
+        std::cout << "5. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
         switch (choice) {
@@ -367,6 +396,8 @@ void runUI() {
                 runUISorts();
                 break;
             case 4:
+                runUIGraf();
+            case 5:
                 std::cout << "Завершение программы...\n";
                 break;
             default:

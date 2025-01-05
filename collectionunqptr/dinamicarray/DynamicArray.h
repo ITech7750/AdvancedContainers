@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <utility>
 #include "../../pointer/UnqPtr.h"
 #include "../../util/exception/IndexOutOfRange.h"
@@ -137,6 +138,22 @@ public:
     }
 
 
+    void removeAt(size_t index) {
+        if (index >= this->size()) {
+            throw IndexOutOfRange();
+        }
+        for (size_t i = index; i < this->size() - 1; ++i) {
+            _items.getValue()[i] = std::move(_items.getValue()[i + 1]);
+        }
+        --_size;
+    }
+
+
+    T* begin() { return _items.getValue(); }
+
+    T* end() { return _items.getValue() + _size; }
+
+
     UnqPtr<DynamicArray<T>> getSubarray(size_t start, size_t end) const {
         if (start >= _size || end > _size || start > end) throw IndexOutOfRange();
         size_t newSize = end - start;
@@ -161,6 +178,41 @@ public:
         }
         std::cout << std::endl;
     }
+
+    /*
+    void quickSort(const std::function<int(const T&, const T&)>& cmp) {
+        SorterServiceDynamicArray<T>::sort(*this, cmp, "quick");
+    }
+    */
+
+public:
+    void quickSort(std::function<bool(const T&, const T&)> comparator) {
+        quickSortHelper(0, _size - 1, comparator);
+    }
+
+
+private:
+    void quickSortHelper(size_t left, size_t right, std::function<bool(const T&, const T&)> comparator) {
+        if (left >= right) return;
+
+        // Выбор опорного элемента
+        T pivot = _items.getValue()[right];
+        size_t partitionIndex = left;
+
+        // Разделение массива
+        for (size_t i = left; i < right; ++i) {
+            if (comparator(_items.getValue()[i], pivot)) {
+                std::swap(_items.getValue()[i], _items.getValue()[partitionIndex]);
+                ++partitionIndex;
+            }
+        }
+        std::swap(_items.getValue()[partitionIndex], _items.getValue()[right]);
+
+        // Рекурсивная сортировка подмассивов
+        if (partitionIndex > 0) quickSortHelper(left, partitionIndex - 1, comparator); // Проверка на underflow
+        quickSortHelper(partitionIndex + 1, right, comparator);
+    }
+
 };
 
 #endif //LAB2_DYNAMICARRAY_H

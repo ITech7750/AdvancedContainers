@@ -1,0 +1,10 @@
+{
+  "option": "Person",
+  "amount": 50,
+  "filters": {
+    "Adult": 30,
+    "Children": 20,
+    "City": "CityB",
+    "BirthYear": 1990
+  }
+}

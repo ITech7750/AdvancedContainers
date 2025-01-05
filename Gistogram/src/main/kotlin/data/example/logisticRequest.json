@@ -1,0 +1,6 @@
+{
+  "resultFilePath": "/tmp/logistics_result.json",
+  "cityAmount": 3,
+  "roadAmount": 3,
+  "cargo": 100
+}

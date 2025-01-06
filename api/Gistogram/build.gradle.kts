@@ -97,6 +97,7 @@ tasks.withType<Test> {
 tasks.bootJar {
     archiveBaseName.set("gistogram-service")
     archiveVersion.set("0.0.1")
+    mainClass.set("com.tech.ApplicationKt")
 }
 
 // Отключение обычного JAR

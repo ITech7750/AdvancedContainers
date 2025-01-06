@@ -93,6 +93,40 @@ class LogisticService(private val repository: LogisticRepository) {
         return Path.of(filePath)
     }
 
+    fun buildLogisticUndirected(resultFilePath: String, cityAmount: Int, roadAmount: Int, cargo: Int) {
+        repository.createLogisticUndirected(resultFilePath, cityAmount, roadAmount, cargo)
+    }
+
+    fun buildLogisticFromFileUndirected(
+        dataFilePath: String?,
+        dataFile: MultipartFile?,
+        resultFilePath: String,
+        startCity: String,
+        endCity: String,
+        cargo: Int
+    ): Path {
+        val inputFilePath = dataFilePath ?: saveTempFile(dataFile!!)
+        repository.createLogisticFromFileUndirected(inputFilePath, resultFilePath, startCity, endCity, cargo)
+        return Path.of(resultFilePath)
+    }
+
+    fun buildLogisticVertexUndirected(resultFilePath: String?, resultFile: MultipartFile?, cityAmount: Int, roadAmount: Int): Path {
+        val filePath = resultFilePath ?: saveTempFile(resultFile!!)
+        repository.createLogisticVertexUndirected(filePath, cityAmount, roadAmount)
+        return Path.of(filePath)
+    }
+
+    fun buildLogisticFromFileVertexUndirected(
+        dataFilePath: String?,
+        dataFile: MultipartFile?,
+        resultFilePath: String,
+        startCity: String,
+        endCity: String
+    ): Path {
+        val inputFilePath = dataFilePath ?: saveTempFile(dataFile!!)
+        repository.createLogisticFromFileVertexUndirected(inputFilePath, resultFilePath, startCity, endCity)
+        return Path.of(resultFilePath)
+    }
 
     private fun saveTempFile(file: MultipartFile): String {
         val tempFile = Files.createTempFile("upload_", file.originalFilename)

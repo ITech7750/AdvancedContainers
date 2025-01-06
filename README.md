@@ -245,6 +245,7 @@ Gistogram представляет собой структуру данных д
 
 ## Описание API
 
+
 ### 1. POST `/api/logistics/logistic`
 Создание логистических данных (графа).
 
@@ -302,7 +303,7 @@ curl -X GET "http://localhost:8080/api/logistics/greeting"
 
 #### Ответ:
 ```
-"Добро пожаловать в систему логистики!"
+"Hello from C++"
 ```
 
 ### 4. POST `/api/logistics/city`
@@ -418,16 +419,221 @@ curl -X POST "http://localhost:8080/api/logistics/histogram" \
 - `birthYear`: Год рождения для фильтрации.
 - `cityStartsWith`: Фильтр по начальной букве города.
 
-**Соберите проект с помощью Gradle**:
+### 8. POST `/api/logistics/bag`
+Создание данных о сумке.
 
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/bag" \
+-d "path=/tmp/bag_result.txt" \
+-d "amount=50" \
+-d "maxCapacity=100" \
+-d "maxVolume=200"
+```
+
+#### Параметры:
+- `path`: Путь для сохранения результата.
+- `amount`: Количество объектов в сумке.
+- `maxCapacity`: Максимальная вместимость.
+- `maxVolume`: Максимальный объём.
+
+### 9. GET `/api/logistics/cities`
+Получение списка всех городов.
+
+#### Пример запроса:
+```bash
+curl -X GET "http://localhost:8080/api/logistics/cities"
+```
+
+#### Пример ответа:
+```json
+[
+  {
+    "id": 1,
+    "name": "CityA",
+    "cargoToDrop": 50,
+    "x": 1.5,
+    "y": 3.2
+  },
+  {
+    "id": 2,
+    "name": "CityB",
+    "cargoToDrop": 30,
+    "x": 2.5,
+    "y": 4.1
+  }
+]
+```
+
+### 10. GET `/api/logistics/roads`
+Получение списка всех дорог.
+
+#### Пример запроса:
+```bash
+curl -X GET "http://localhost:8080/api/logistics/roads"
+```
+
+#### Пример ответа:
+```json
+[
+  {
+    "id": 1,
+    "name": "Road1",
+    "length": "15.5",
+    "maxSpeed": "100",
+    "start": {
+      "id": 1,
+      "name": "CityA",
+      "cargoToDrop": 50,
+      "x": 1.5,
+      "y": 3.2
+    },
+    "end": {
+      "id": 2,
+      "name": "CityB",
+      "cargoToDrop": 30,
+      "x": 2.5,
+      "y": 4.1
+    }
+  }
+]
+```
+
+### 11. DELETE `/api/logistics/city/{name}`
+Удаление города по его имени.
+
+#### Пример запроса:
+```bash
+curl -X DELETE "http://localhost:8080/api/logistics/city/CityA"
+```
+
+#### Ответ:
+```
+HTTP/1.1 204 No Content
+```
+
+### 12. POST `/api/logistics/logistic/undirected`
+Создание логистических данных с неориентированными дорогами.
+
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/logistic/undirected" \
+-d "resultFilePath=/tmp/logistic_undirected_result.txt" \
+-d "cityAmount=10" \
+-d "roadAmount=20" \
+-d "cargo=100"
+```
+
+#### Параметры:
+- `resultFilePath`: Путь для сохранения результата.
+- `cityAmount`: Количество городов.
+- `roadAmount`: Количество дорог.
+- `cargo`: Общий объём груза.
+
+### 13. POST `/api/logistics/logistic/from-file/undirected`
+Создание логистических данных из файла с неориентированными дорогами.
+
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/logistic/from-file/undirected" \
+-F "dataFile=@logistics_input.txt" \
+-F "resultFilePath=/tmp/logistic_undirected_result.txt" \
+-F "startCity=CityA" \
+-F "endCity=CityB" \
+-F "cargo=200"
+```
+
+#### Параметры:
+- `dataFile`: Файл с данными о дорогах и городах.
+- `resultFilePath`: Путь для сохранения результата.
+- `startCity`: Начальный город.
+- `endCity`: Конечный город.
+- `cargo`: Объём груза.
+
+### 14. POST `/api/logistics/vertex/undirected`
+Создание графа с неориентированными дорогами.
+
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/vertex/undirected" \
+-d "resultFilePath=/tmp/vertex_undirected_result.txt" \
+-d "cityAmount=15" \
+-d "roadAmount=25"
+```
+
+#### Параметры:
+- `resultFilePath`: Путь для сохранения результата.
+- `cityAmount`: Количество городов.
+- `roadAmount`: Количество дорог.
+
+### 15. POST `/api/logistics/histogram/from-file`
+Создание гистограммы из файла.
+
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/histogram/from-file" \
+-d "path=/tmp/histogram_file_result.txt" \
+-d "filePath=/path/to/input/file.txt" \
+-d "option=distribution" \
+-d "amount=100" \
+-d "enableStatistic=1" \
+-d "filter1=10" \
+-d "filter2=20" \
+-d "filter3=30" \
+-d "filter4=40" \
+-d "birthYear=1990" \
+-d "cityStartsWith=A"
+```
+
+#### Параметры:
+- `path`: Путь для сохранения результата.
+- `filePath`: Путь к входному файлу.
+- `option`: Тип гистограммы.
+- `amount`: Объём данных.
+- `enableStatistic`: Включить или выключить статистику (1 или 0).
+- `filter1` - `filter4`: Параметры фильтрации.
+- `birthYear`: Год рождения для фильтрации.
+- `cityStartsWith`: Фильтр по начальной букве города.
+
+### 16. POST `/api/logistics/logistic/from-file/vertex/undirected`
+Создание неориентированных вершин логистики из файла.
+
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/logistic/from-file/vertex/undirected" \
+-F "dataFile=@logistics_input.txt" \
+-F "resultFilePath=/tmp/vertex_undirected_result.txt" \
+-F "startCity=CityA" \
+-F "endCity=CityB"
+```
+
+#### Параметры:
+- `dataFile`: Файл с данными о дорогах и городах.
+- `resultFilePath`: Путь для сохранения результата.
+- `startCity`: Начальный город.
+- `endCity`: Конечный город.
+
+## Docker
+
+Для запуска проекта с использованием Docker Compose выполните следующие шаги:
+
+1. **Соберите проект с помощью Gradle**:
    ```bash
    ./gradlew build
    ```
-**Запустите проект с помощью Docker Compose** (работа ведется):
 
+2. **Запустите проект с помощью Docker Compose**:
    ```bash
    docker-compose up --build
    ```
+
+### Docker Compose конфигурация:
+
+Docker Compose конфигурация включает в себя следующие сервисы:
+
+- **app**: Сервис на основе Spring Boot, реализующий REST API.
+- **db**: PostgreSQL база данных для хранения данных о городах
+
 
 ## Технологии
 

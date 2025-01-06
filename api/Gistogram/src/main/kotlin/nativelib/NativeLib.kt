@@ -131,7 +131,7 @@ class NativeLib {
     )
 
     companion object {
-        private const val LIBRARY_PATH = "/home/itech/Desktop/University/AdvancedContainers/cmake-build-debug/libNativeLib.so"
+        private val LIBRARY_PATH = System.getenv("NATIVE_LIB_PATH") ?: "./libNativeLib.so"
 
         init {
             try {
@@ -143,4 +143,5 @@ class NativeLib {
             }
         }
     }
+
 }

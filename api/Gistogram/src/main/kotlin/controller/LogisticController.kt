@@ -16,6 +16,18 @@ class LogisticController(private val service: LogisticService) {
     @GetMapping("/greeting")
     fun getGreeting(): String = service.getGreeting()
 
+    @PostMapping("/logistic")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createLogistic(
+        @RequestParam resultFilePath: String,
+        @RequestParam cityAmount: Int,
+        @RequestParam roadAmount: Int,
+        @RequestParam cargo: Int
+    ) {
+        service.buildLogistic(resultFilePath, cityAmount, roadAmount, cargo)
+    }
+
+
     @PostMapping("/logistic/from-file")
     fun createLogisticFromFile(
         @RequestParam(required = false) dataFilePath: String?,

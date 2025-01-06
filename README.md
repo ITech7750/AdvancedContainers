@@ -193,7 +193,7 @@ Time taken: 3106,23 ms (Measured by service), Actual elapsed time: 3151 ms
 2. Merge Sort и Heap Sort показывают наилучший результат.
 3. Quick Sort находится в среднем диапазоне эффективности.
 
-### Еще примеры:
+### Еще примеры ([Sorts](java/Sorts)):
 Сортировка по возрасту с записью результата:
 ```java
 SorterService.sortByAge("data.txt", false, "bubble");

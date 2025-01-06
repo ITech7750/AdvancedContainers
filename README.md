@@ -163,6 +163,53 @@ public class Main {
 }
 
 ```
+Наша библиотека предоставляет возможность измерять производительность различных алгоритмов сортировки и визуализировать результаты. Пример использования представлен в файле [SortPerformanceTest.java](java/Sorts/src/main/java/org/example/perfomance/SortPerformanceTest.java)
+
+### Замеры производительности
+
+При тестировании с разным количеством элементов в файлах, например, результаты сортировки для алгоритма Quick Sort выглядят следующим образом:
+```bash
+Testing algorithm: quick
+File: data_10.txt
+Loading library...
+Library loaded successfully.
+Sorting with quick took 0.134237 ms.
+Time taken: 0,13 ms (Measured by service), Actual elapsed time: 2 ms
+File: data_100.txt
+Sorting with quick took 1.91776 ms.
+Time taken: 1,92 ms (Measured by service), Actual elapsed time: 2 ms
+File: data_1000.txt
+Sorting with quick took 49.2537 ms.
+Time taken: 49,25 ms (Measured by service), Actual elapsed time: 54 ms
+File: data_10000.txt
+Sorting with quick took 3106.23 ms.
+Time taken: 3106,23 ms (Measured by service), Actual elapsed time: 3151 ms
+```
+
+Производя замеры получим следующий результат:
+![img.png](java/Sorts/img.png)
+На графике видно, что:
+1. Bubble Sort демонстрирует наихудшую производительность.
+2. Merge Sort и Heap Sort показывают наилучший результат.
+3. Quick Sort находится в среднем диапазоне эффективности.
+
+### Еще примеры:
+Сортировка по возрасту с записью результата:
+```java
+SorterService.sortByAge("data.txt", false, "bubble");
+```
+Сортировка по имени:
+```java
+SorterService.sortByName("data.txt", false, "heap");
+```
+Получение времени выполнения сортировки:
+```java
+double timeTaken = SorterService.sortByAgeAndGetTime("data.json", true, "quick");
+```
+Получение отсортированного списка объектов:
+```java
+List<Person> sortedPersons = SorterService.getSortedByAge("data.json", true, "merge");
+```
 Весь функционал для работы с кастомными контенерами покрыт тестами в парадигме AAA.
 
 

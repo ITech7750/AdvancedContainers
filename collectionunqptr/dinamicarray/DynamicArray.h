@@ -183,7 +183,7 @@ public:
     void quickSort(const std::function<int(const T&, const T&)>& cmp) {
         SorterServiceDynamicArray<T>::sort(*this, cmp, "quick");
     }
-    */
+
 
 public:
     void quickSort(std::function<bool(const T&, const T&)> comparator) {
@@ -212,6 +212,7 @@ private:
         if (partitionIndex > 0) quickSortHelper(left, partitionIndex - 1, comparator); // Проверка на underflow
         quickSortHelper(partitionIndex + 1, right, comparator);
     }
+    */
 
 };
 

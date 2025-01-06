@@ -49,7 +49,6 @@ add_library(NativeLib SHARED
         test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
         jni/SorterServiceJNI.cpp
         jni/nativelib.cpp
-        sort/SorterServiceDynamicArray.h
 )
 
 target_include_directories(NativeLib PRIVATE ${JNI_INCLUDE_DIRS})

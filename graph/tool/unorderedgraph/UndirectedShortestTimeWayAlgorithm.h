@@ -6,8 +6,8 @@
 #include "../../presentation/logistic/data/City.h"
 #include "../../../gistogram/model/dictionary/HashMap.h"
 #include "../../domain/model/UndirectedGraph.h"
-
-
+#include "../../../collectionunqptr/dinamicarray/DynamicArrayAdapter.h"
+#include "../../../sort/SorterServiceArrayAdapter.h"
 
 
 template $graph
@@ -58,15 +58,18 @@ public:
                         timetable[neighbor] = time;
                         prev[neighbor] = current;
                         vertices.add(neighbor);
-                        /*
-                        vertices.quickSort([&](Vertex* left, Vertex* right) {
-                            if (timetable[left] < timetable[right]) return -1;
-                            if (timetable[left] > timetable[right]) return 1;
-                            return 0;
-                        });
-                        */
 
-                        vertices.quickSort(compare);
+                        DynamicArrayAdapter<Vertex*> adapter(vertices);
+                        ComparatorHelper<Vertex*, std::unordered_map<Vertex*, size_t>>::context = &timetable;
+
+                        SorterServiceArrayAdapter<Vertex*>::sort(
+                            adapter,
+                            ComparatorHelper<Vertex*, std::unordered_map<Vertex*, size_t>>::wrapper,
+                            "quick"
+                        );
+
+
+                        //vertices.quickSort(compare);
                     }
                 }
             }

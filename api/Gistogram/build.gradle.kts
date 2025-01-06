@@ -93,14 +93,13 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-/*
+// Конфигурация bootJar
 tasks.bootJar {
-    task("testClasses")
-    archiveBaseName.set("graf-service")
+    archiveBaseName.set("gistogram-service")
     archiveVersion.set("0.0.1")
 }
 
+// Отключение обычного JAR
 tasks.jar {
     enabled = false
 }
- */

@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+  postgres-db-master:
+    image: postgres:15-alpine
+    container_name: postgres-db-master
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1357
+      POSTGRES_DB: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-master-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  postgres-db-replica:
+    image: postgres:15-alpine
+    container_name: postgres-db-replica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1357
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres-replica-data:/var/lib/postgresql/data
+    depends_on:
+      - postgres-db-master
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  gistogram-service:
+    build:
+      #context: ./gistogram-service
+      dockerfile: Dockerfile
+      context: .
+      pull: false
+    container_name: gistogram-service
+    depends_on:
+      - postgres-db-master
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db-master:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1357
+      SPRING_APPLICATION_NAME: gistogram-service
+    ports:
+      - "8003:8080"
+    networks:
+      - app-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres-master-data:
+  postgres-replica-data:
+
+networks:
+  app-network:
+    driver: bridge

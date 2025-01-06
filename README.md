@@ -210,52 +210,45 @@ Gistogram представляет собой структуру данных д
 В данном проекте реализован специализированный "dsl" для создания и анализа гистограмм на основе шаблонных классов GistogramScope и Gistogram. Этот DSL предоставляет пользователям удобные средства для работы с гистограммами, позволяя конфигурировать параметры, добавлять данные и вычислять статистику.
 
 Далее все это будем использовать в ЛР4.
+# Лабораторная работа №4
 
-## Лабораторная работа №4
+## Описание
 
-### Описание
+В этой лабораторной работе был реализован API для работы с логистическими данными. Использовалась библиотека, написанная на C++, которая предоставляет функции для создания и анализа графов, а также нахождения кратчайших путей между вершинами. Для связи C++ и Kotlin использовался JNI.
 
-В этой лабораторной работе был реализован API для работы с логистическими данными [Gistogram](Gistogram). Использовалась моя библиотека написанная на C++, которая предоставляет функции для создания и анализа графов, а также нахождения кратчайших путей между вершинами . Для связи C++ и Kotlin использовался JNI [nativelib.cpp](jni/nativelib.cpp).
+## Реализованные функции
 
-### Что было реализовано:
+### Библиотека на C++
 
-1. Библиотека на C++:
+1. **Генерация графов**:
+    - Создание графов с логистическими данными (города и дороги).
+    - Поддержка как направленных, так и ненаправленных графов.
+2. **Чтение графов из файла**:
+    - Поддержка текстовых форматов файлов с описанием графа.
+3. **Анализ графов**:
+    - Нахождение кратчайших путей между двумя вершинами (по времени и по количеству вершин).
 
-2. Генерация графов с логистическими данными (города и дороги).
+### API на Kotlin
 
-3. Чтение графов из файла.
+Реализован REST API с использованием Spring Boot для управления логистическими данными:
 
-4. Нахождение кратчайшего пути (по времени и по вершинам).
+1. **CRUD-операции** для городов и дорог.
+2. **Вызов функций из библиотеки на C++ через JNI**.
+3. **Форматы данных**:
+    - JSON для взаимодействия с клиентом.
+    - Текстовые файлы для обработки данных библиотеки.
 
-5. Работа как с направленными, так и с ненаправленными графами.
-
-### API на Kotlin:
-
-REST API с использованием Spring Boot для управления логистическими данными.
-
-1. CRUD операции для городов и дорог.
-
-2. Вызов функций из C++ библиотеки через JNI.
-
-Синхронизация C++ и Kotlin:
-
-1. Использование JNI для вызова методов библиотеки.
-
-2. Форматы данных: JSON и текстовые файлы.
-
-Использование PostgreSQL:
+### Использование PostgreSQL
 
 1. Хранение данных о городах и дорогах.
+2. Использование Spring Data JPA для управления базой данных.
 
-2. Использование Spring Data JPA для работы с базой данных.
+## Описание API
 
-### Описание API
+### 1. POST `/api/logistics/logistic`
+Создание логистических данных (графа).
 
-1. POST /api/logistics/logistic
-
-Создание логистических данных.
-
-Пример запроса:
+#### Пример запроса:
 ```bash
 curl -X POST "http://localhost:8080/api/logistics/logistic" \
 -d "resultFilePath=/tmp/logistics_result.txt" \
@@ -264,123 +257,183 @@ curl -X POST "http://localhost:8080/api/logistics/logistic" \
 -d "cargo=100"
 ```
 
-2. POST /api/logistics/logistic/from-file
+#### Параметры:
+- `resultFilePath`: Путь для сохранения результата.
+- `cityAmount`: Количество городов.
+- `roadAmount`: Количество дорог.
+- `cargo`: Общий объём груза.
 
-
+### 2. POST `/api/logistics/logistic/from-file`
 Создание логистических данных из файла.
 
-Пример запроса:
-
+#### Пример запроса:
 ```bash
 curl -X POST "http://localhost:8080/api/logistics/logistic/from-file" \
--F "dataFilePath=@logistics_input.txt" \
+-F "dataFile=@logistics_input.txt" \
 -F "resultFilePath=/tmp/logistics_result.txt" \
 -F "startCity=CityA" \
 -F "endCity=CityB" \
 -F "cargo=200"
 ```
-Формат файла logistics_input.txt:
 
+#### Формат входного файла (`logistics_input.txt`):
+```
 {Road1;15.5;100;CityA;CityB}
 {Road2;10.2;80;CityB;CityC}
 {Road3;5.5;60;CityA;CityC}
 {Road4;12.8;90;CityC;CityD}
 {Road5;7.3;70;CityD;CityE}
+```
 
-3. GET /api/logistics/greeting
+#### Параметры:
+- `dataFile`: Файл с данными о дорогах и городах.
+- `resultFilePath`: Путь для сохранения результата.
+- `startCity`: Начальный город.
+- `endCity`: Конечный город.
+- `cargo`: Объём груза.
 
+### 3. GET `/api/logistics/greeting`
 Возвращает приветственное сообщение.
 
-Пример запроса:
-
+#### Пример запроса:
 ```bash
 curl -X GET "http://localhost:8080/api/logistics/greeting"
 ```
 
-4. CRUD операции для городов и дорог
-
-```bash
-Пример запроса на добавление города:
-
-curl -X POST "http://localhost:8080/api/logistics/city" \
--H "Content-Type: application/json" \
--d '{"name": "CityA", "cargoToDrop": 50, "x": 10.0, "y": 20.0}'
+#### Ответ:
+```
+"Добро пожаловать в систему логистики!"
 ```
 
+### 4. POST `/api/logistics/city`
 Сохранение информации о городе.
 
-POST /api/logistics/city
+#### Пример запроса:
 ```bash
 curl -X POST http://localhost:8080/api/logistics/city \
 -H "Content-Type: application/json" \
 -d '{
-"name": "CityA",
-"cargoToDrop": 50,
-"x": 1.5,
-"y": 3.2
+  "name": "CityA",
+  "cargoToDrop": 50,
+  "x": 1.5,
+  "y": 3.2
 }'
 ```
-пример ответа:
-```
+
+#### Пример ответа:
+```json
 {
-"id": 1,
-"name": "CityA",
-"cargoToDrop": 50,
-"x": 1.5,
-"y": 3.2
+  "id": 1,
+  "name": "CityA",
+  "cargoToDrop": 50,
+  "x": 1.5,
+  "y": 3.2
 }
 ```
 
-POST /api/logistics/road
+### 5. POST `/api/logistics/road`
 Сохранение информации о дороге.
+
+#### Пример запроса:
 ```bash
 curl -X POST http://localhost:8080/api/logistics/road \
 -H "Content-Type: application/json" \
 -d '{
-"name": "Road1",
-"length": "15.5",
-"maxSpeed": "100",
-"start": {
-"id": 1
-},
-"end": {
-"id": 2
-}
+  "name": "Road1",
+  "length": "15.5",
+  "maxSpeed": "100",
+  "start": {
+    "id": 1
+  },
+  "end": {
+    "id": 2
+  }
 }'
 ```
-Пример ответа:
-```bash
+
+#### Пример ответа:
+```json
 {
-"id": 1,
-"name": "Road1",
-"length": "15.5",
-"maxSpeed": "100",
-"start": {
-"id": 1,
-"name": "CityA",
-"cargoToDrop": 50,
-"x": 1.5,
-"y": 3.2
-},
-"end": {
-"id": 2,
-"name": "CityB",
-"cargoToDrop": 30,
-"x": 2.5,
-"y": 4.1
-}
+  "id": 1,
+  "name": "Road1",
+  "length": "15.5",
+  "maxSpeed": "100",
+  "start": {
+    "id": 1,
+    "name": "CityA",
+    "cargoToDrop": 50,
+    "x": 1.5,
+    "y": 3.2
+  },
+  "end": {
+    "id": 2,
+    "name": "CityB",
+    "cargoToDrop": 30,
+    "x": 2.5,
+    "y": 4.1
+  }
 }
 ```
 
-Технологии:
+### 6. POST `/api/logistics/vertex`
+Создание графа на основе городов и дорог.
 
-C++: Для работы с графами и реализации алгоритмов.
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/vertex" \
+-d "resultFilePath=/tmp/vertex_result.txt" \
+-d "cityAmount=15" \
+-d "roadAmount=25"
+```
 
-Kotlin: Реализация REST API с использованием Spring Boot. 
+#### Параметры:
+- `resultFilePath`: Путь для сохранения результата.
+- `cityAmount`: Количество городов.
+- `roadAmount`: Количество дорог.
 
-JNI: Для интеграции функций C++ с Kotlin.
+### 7. POST `/api/logistics/histogram`
+Построение гистограммы на основе данных.
 
-PostgreSQL: Для хранения данных о городах и дорогах.
+#### Пример запроса:
+```bash
+curl -X POST "http://localhost:8080/api/logistics/histogram" \
+-d "path=/tmp/histogram_result.txt" \
+-d "option=distribution" \
+-d "amount=100" \
+-d "enableStatistic=1" \
+-d "filter1=10" \
+-d "filter2=20" \
+-d "filter3=30" \
+-d "filter4=40" \
+-d "birthYear=1990" \
+-d "cityStartsWith=A"
+```
 
-Spring Data JPA: Для работы с базой данных.
+#### Параметры:
+- `path`: Путь для сохранения результата.
+- `option`: Тип гистограммы (например, "distribution").
+- `amount`: Объём данных.
+- `enableStatistic`: Включить или выключить статистику (1 или 0).
+- `filter1` - `filter4`: Параметры фильтрации.
+- `birthYear`: Год рождения для фильтрации.
+- `cityStartsWith`: Фильтр по начальной букве города.
+
+**Соберите проект с помощью Gradle**:
+
+   ```bash
+   ./gradlew build
+   ```
+**Запустите проект с помощью Docker Compose** (работа ведется):
+
+   ```bash
+   docker-compose up --build
+   ```
+
+## Технологии
+
+- **C++**: Для работы с графами и реализации алгоритмов.
+- **Kotlin**: Реализация REST API с использованием Spring Boot.
+- **JNI**: Для интеграции функций C++ с Kotlin.
+- **PostgreSQL**: Для хранения данных о городах и дорогах.
+- **Spring Data JPA**: Для работы с базой данных.
 

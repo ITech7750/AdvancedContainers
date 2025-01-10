@@ -50,13 +50,14 @@ public:
     }
 
     UnqPtr<MutableSequence<T>> getSubsequence(size_t start, size_t end) override {
-        if (start >= size() || end >= size() || start > end) {
+        if (start >= size() || end > size() || start > end) {
             throw IndexOutOfRange();
         }
-        LinkedListUP<T>* subItems = items->getSublist(start, end);
-        auto* subSequence = new MutableListSequence(*subItems);
-        return UnqPtr<MutableSequence<T>>(subSequence); // Оборачиваем в UnqPtr
+
+        auto subItems = items->getSublist(start, end);
+        return UnqPtr<MutableSequence<T>>(new MutableListSequence(std::move(*subItems)));
     }
+
 
     UnqPtr<MutableSequence<T>> concat(const Iterable<T> &iterable) override {
         auto nItems = LinkedListUP<T>();
@@ -67,7 +68,7 @@ public:
             nItems.append(iterable[i]);
         }
         auto* buf = new MutableListSequence(nItems);
-        return UnqPtr<MutableSequence<T>>(buf); // Оборачиваем в UnqPtr
+        return UnqPtr<MutableSequence<T>>(buf);
     }
 
     MutableListSequence<T> operator+(const Iterable<T> &iterable) {

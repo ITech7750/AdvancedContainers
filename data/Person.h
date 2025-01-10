@@ -4,7 +4,7 @@
 #include <utility>
 #include "../util/Definition.h"
 #include "../util/random.h"
-#include "../collectionunqptr/dynamicarray/DynamicArray.h"
+#include "../../collectionunqptr/dynamicarray/DynamicArray.h"
 #include <iostream>
 #include <random>
 

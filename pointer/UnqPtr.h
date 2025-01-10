@@ -66,6 +66,19 @@ public:
         this->value = new T(value);
     }
 
+    void reset(T* newValue = nullptr) {
+        if (value != newValue) {
+            delete value;
+            value = newValue;
+        }
+    }
+
+    T* release() {
+        T* temp = value;
+        value = nullptr;
+        return temp;
+    }
+
     void clear() {
         if (value != nullptr) {
             delete value;

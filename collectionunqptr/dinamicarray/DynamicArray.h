@@ -153,6 +153,14 @@ public:
 
     T* end() { return _items.getValue() + _size; }
 
+    bool contains(const T& value) const {
+        for (size_t i = 0; i < _size; ++i) {
+            if (_items.getValue()[i] == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     UnqPtr<DynamicArray<T>> getSubarray(size_t start, size_t end) const {
         if (start >= _size || end > _size || start > end) throw IndexOutOfRange();

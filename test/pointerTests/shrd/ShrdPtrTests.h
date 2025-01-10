@@ -12,6 +12,14 @@ private:
     void testDereferenceOperator();
     void testClearOrigin();
     void testNullBehavior();
+    void testMoveConstructor();
+    void testMoveAssignment();
+    void testUseCount();
+    void testReset();
+    void testUnique();
+
+
+
 };
 
 #endif // SHRD_PTR_TESTS_H

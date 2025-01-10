@@ -1,13 +1,18 @@
 #include "ui.h"
 #include "../test/pointerTests/smrt/smrtPtrTestsAB.h"
 #include "../test/pointerTests/smrt/SmrtPtrTests.h"
+#include "../test/pointerTests/smrt/SmrtPtrLoadTest.h"
 #include "../test/pointerTests/unq/unqPtrTestsAB.h"
 #include "../test/pointerTests/shrd/shrdPtrTestsAB.h"
-#include "../test/mutableListSeq/TestMutableListSequence.h"
+#include "../test/mutableListSeq/MutableListSequenceUnqPtrTests.h"
 #include "../test/loadSeq/loadTestSeq.h"
 #include "../test/loadTests/loadTests.h"
 #include "../test/pointerTests/shrd/ShrdPtrTests.h"
+#include "../test/pointerTests/shrd/ShrdPtrLoadTest.h"
 #include "../test/pointerTests/unq/UnqPtrTests.h"
+#include "../test/pointerTests/unq/UnqPtrLoadTest.h"
+#include "../test/pointerTests/weak/WeakPtrTests.h"
+#include "../test/pointerTests/weak/WeakPtrLoadTest.h"
 #include "../test/sorts/DataTestSuiteArray.h"
 #include "../test/sorts/InteractiveTestSuiteArray.h"
 #include "../test/sorts/DataTestSuiteList.h"
@@ -16,15 +21,21 @@
 #include "../test/mutableArraySeq/MutableArraySequenceUnqPtrTests.h"
 #include "../test/graph/graphTests.h"
 #include "../test/graph/undirectedGraphTest.h"
+#include "../test/hashmap/HashMapTests.h"
 #include <iostream>
 
 
 void runPointerTestsUI() {
     int choice;
+    UnqPtrLoadTest loadTestUnq(1000000, 100, 4);
+    SmrtPtrLoadTest loadTestSmrt(1000000, 100, 4);
+    ShrdPtrLoadTest loadTestShrd(1000000, 100, 4);
+    WeakPtrLoadTest loadTestWeak(1000000, 100, 4);
     std::cout << "\n=== Меню тестов указателей ===\n";
     std::cout << "1. Тест умных указателей (Smart Pointer)\n";
     std::cout << "2. Тест уникальных указателей (Unique Pointer)\n";
     std::cout << "3. Тест разделяемых указателей (Shared Pointer)\n";
+    std::cout << "4. Тест weak указателей...\n";
     std::cout << "0. Вернуться в главное меню\n";
     std::cout << "Введите ваш выбор: ";
     std::cin >> choice;
@@ -33,17 +44,24 @@ void runPointerTestsUI() {
             std::cout << "Запуск теста умных указателей...\n";
             smrtPtrTesting();
             SmrtPtrTests().runAllTests();
+            loadTestSmrt.runTests();
             break;
         case 2:
-            std::cout << "Запуск теста уникальных указателей...\n";
+            std::cout << "Запуск тестов уникальных указателей...\n";
             uniqPtrTesting();
             UnqPtrTests().runAllTests();
+            loadTestUnq.runTests();
             break;
         case 3:
             std::cout << "Запуск теста разделяемых указателей...\n";
             shrdPtrTesting();
             ShrdPtrTests().runAllTests();
+            loadTestShrd.runTests();
             break;
+        case 4:
+            std::cout << "Запуск теста weak указателей...\n";
+            WeakPtrTests::runAllTests();
+            loadTestWeak.runTests();
         case 0:
             return;
         default:
@@ -64,7 +82,7 @@ void runSequenceTestsUI() {
     switch (choice) {
         case 1:
             std::cout << "Запуск теста мутабельной последовательности на базу List...\n";
-            mutableListSequenceTests();
+            MutableListSequenceUnqPtrTests::runAllTests();
             break;
         case 2:
             std::cout << "Запуск теста мутабельной последовательности на базу Array...\n";
@@ -79,7 +97,7 @@ void runSequenceTestsUI() {
             std::cout << "Введите степень числа элементов (10^k): ";
             std::cin >> k;
             std::cout << "Запуск нагрузочного теста для 10^" << k << " элементов...\n";
-            //std::cout << loadTestSeq(k) << "\n";
+            std::cout << loadTestSeq(k) << "\n";
             break;
         }
         case 5:

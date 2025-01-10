@@ -2,7 +2,6 @@
 #define LAB2_ELEMENT_H
 
 #include "../../util/exception/WrongType.h"
-#include "../../pointer/UnqPtr.h"
 #include "../../pointer/ShrdPtr.h"
 
 //1

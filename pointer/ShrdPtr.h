@@ -1,48 +1,128 @@
 #ifndef LABA1_SHRDPTR_H
 #define LABA1_SHRDPTR_H
 
-#include "UnqPtr.h"
+#include <cstddef>
+#include <stdexcept>
+
+template<class T>
+class WeakPtr;
 
 template<class T>
 class ShrdPtr {
 private:
-    const UnqPtr<T> *unqPtr;
+    T* value;
+    size_t* referenceCount;
+    size_t* weakReferenceCount;
 
 public:
-    ShrdPtr() : unqPtr(nullptr) {}
+    ShrdPtr() : value(nullptr), referenceCount(nullptr), weakReferenceCount(nullptr) {}
 
-    explicit ShrdPtr(const UnqPtr<T>* ptr) : unqPtr(ptr) {}
+    explicit ShrdPtr(T* ptr)
+        : value(ptr), referenceCount(new size_t(1)), weakReferenceCount(new size_t(0)) {}
 
-    // Конструктор копирования
-    ShrdPtr(const ShrdPtr<T>& other) : unqPtr(other.unqPtr) {}
-
-    const T* getValue() const {
-        return unqPtr ? unqPtr->getValue() : nullptr;
+    ShrdPtr(const ShrdPtr<T>& other)
+        : value(other.value), referenceCount(other.referenceCount), weakReferenceCount(other.weakReferenceCount) {
+        if (referenceCount) {
+            ++(*referenceCount);
+        }
     }
 
-    // Оператор присвоения копии
+    ShrdPtr(ShrdPtr<T>&& other) noexcept
+        : value(other.value), referenceCount(other.referenceCount), weakReferenceCount(other.weakReferenceCount) {
+        other.value = nullptr;
+        other.referenceCount = nullptr;
+        other.weakReferenceCount = nullptr;
+    }
+
+    explicit ShrdPtr(const WeakPtr<T>& weakPtr) {
+        if (!weakPtr.expired()) {
+            value = weakPtr.value;
+            referenceCount = weakPtr.referenceCount;
+            if (referenceCount) {
+                ++(*referenceCount);
+            }
+        } else {
+            value = nullptr;
+            referenceCount = nullptr;
+        }
+    }
     ShrdPtr<T>& operator=(const ShrdPtr<T>& other) {
-        unqPtr = other.unqPtr;
+        if (this != &other) {
+            clear();
+            value = other.value;
+            referenceCount = other.referenceCount;
+            weakReferenceCount = other.weakReferenceCount;
+            if (referenceCount) {
+                ++(*referenceCount);
+            }
+        }
         return *this;
     }
 
+    ShrdPtr<T>& operator=(ShrdPtr<T>&& other) noexcept {
+        if (this != &other) {
+            clear();
+            value = other.value;
+            referenceCount = other.referenceCount;
+            weakReferenceCount = other.weakReferenceCount;
+            other.value = nullptr;
+            other.referenceCount = nullptr;
+            other.weakReferenceCount = nullptr;
+        }
+        return *this;
+    }
+
+    ~ShrdPtr() {
+        clear();
+    }
+
     T* operator->() const {
-        return unqPtr ? unqPtr->getValue() : nullptr;
+        return value;
     }
 
     T& operator*() const {
-        return *(unqPtr->getValue());
+        if (!value) throw std::runtime_error("Dereferencing null ShrdPtr");
+        return *value;
     }
 
-    const UnqPtr<T>* getOrigin() const {
-        return unqPtr;
+    size_t use_count() const {
+        return referenceCount ? *referenceCount : 0;
     }
 
-    void clearOrigin() {
-        if (unqPtr) {
-            const_cast<UnqPtr<T>*>(unqPtr)->clear();
+    bool unique() const {
+        return use_count() == 1;
+    }
+
+    void reset(T* ptr = nullptr) {
+        clear();
+        if (ptr) {
+            value = ptr;
+            referenceCount = new size_t(1);
+            weakReferenceCount = new size_t(0);
         }
+    }
+
+    T* get() const {
+        return value;
+    }
+
+    friend class WeakPtr<T>;
+
+private:
+    void clear() {
+        if (referenceCount) {
+            if (--(*referenceCount) == 0) {
+                delete value;
+                if (*weakReferenceCount == 0) {
+                    delete weakReferenceCount;
+                }
+                delete referenceCount;
+            }
+        }
+        value = nullptr;
+        referenceCount = nullptr;
+        weakReferenceCount = nullptr;
     }
 };
 
-#endif //LABA1_SHRDPTR_H
+#endif // LABA1_SHRDPTR_H

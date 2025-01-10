@@ -1,4 +1,10 @@
 #include "loadTests.h"
+#include "../../collectionunqptr/sequence/arraysequence/MutableArraySequenceUnqPtr.h"
+#include "../../util/random.h"
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <chrono>
 
 #define timeMls std::chrono::high_resolution_clock::time_point
 #define clock std::chrono::high_resolution_clock
@@ -12,7 +18,7 @@ void fillSeq(MutableSequence<long>* seq, long amount) {
 }
 
 void testSequence(MutableSequence<long>* seq, int k, std::ofstream& file, const std::string& pointerType) {
-    long amount = (long)pow(10, k);
+    long amount = static_cast<long>(pow(10, k));
 
     timeMls start = clock::now();
 
@@ -34,17 +40,11 @@ void loadTests() {
     resultsFile << "PointerType,ElementCount,ExecutionTime\n";
 
     std::cout << "+---\n";
-    std::cout << "| MutableListSequenceUnqPtr с UnqPtr\n";
+    std::cout << "| MutableArraySequenceUnqPtr с UnqPtr\n";
     for (int k = 3; k < 8; k++) {
-        auto seq = new MutableListSequenceUnqPtr<long>();
+        auto seq = new MutableArraySequenceUnqPtr<long>();
         testSequence(seq, k, resultsFile, "UniquePtr");
-    }
-
-    std::cout << "+---\n";
-    std::cout << "| MutableListSequence с сырыми указателями\n";
-    for (int k = 3; k < 8; k++) {
-        auto seq = new MutableListSequence<long>();
-        testSequence(seq, k, resultsFile, "RawPtr");
+        delete seq;
     }
 
     std::cout << "+---\n";

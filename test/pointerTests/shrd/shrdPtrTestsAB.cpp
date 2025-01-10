@@ -9,7 +9,7 @@ void shrdPtrTesting() {
     A *a = new A(12);
     A *a1 = new A(12);
     B *b = new B(100);
-
+    /*
     std::tuple tests{
             TestCase<A *>(
                     "ShrdPtr: Инициализация",
@@ -74,4 +74,5 @@ void shrdPtrTesting() {
 
     util::forEach(tests, [](auto test) { test(); });
     std::cout << std::endl;
+    */
 }

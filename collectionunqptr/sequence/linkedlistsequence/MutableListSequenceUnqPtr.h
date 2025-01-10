@@ -3,7 +3,6 @@
 
 #include "../MutableSequence.h"
 #include "../../linkedlist/LinkedListUP.h"
-#include "../../../collection/sequence/linkedlistsequence/MutableListSequence.h"
 
 template<class T>
 class MutableListSequenceUnqPtr : public MutableSequence<T> {
@@ -102,6 +101,8 @@ public:
     void set(size_t index, T value) override {
         items->set(index, value);
     }
+
+
 };
 
 

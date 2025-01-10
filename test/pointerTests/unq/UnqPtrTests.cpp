@@ -1,6 +1,5 @@
 #include "UnqPtrTests.h"
 #include "../../../pointer/UnqPtr.h"
-
 #include <iostream>
 #include <string>
 #include <cassert>
@@ -73,10 +72,11 @@ void UnqPtrTests::testClearMethod() {
 
 void UnqPtrTests::testDereferenceOperator() {
     UnqPtr<std::string> ptr(new std::string("UnqPtr"));
-    assert(ptr->size() == 14);
+    assert(ptr->size() == 6);
     assert(*ptr == "UnqPtr");
     std::cout << "Тест 8 пройден: Операторы -> и *\n";
 }
+
 
 void UnqPtrTests::testRepeatedMove() {
     UnqPtr<int> ptr1(new int(512));

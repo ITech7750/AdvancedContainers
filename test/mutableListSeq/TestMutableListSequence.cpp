@@ -57,6 +57,7 @@ void mutableListSequenceTests() {
                     }
             ),
              */
+        /*
             TestCase<MutableListSequenceUnqPtr<int>>(
                     "MutableListSequenceUnqPtr: Прибавление к существующей",
                     MutableListSequenceUnqPtr<int>(a, 6),
@@ -71,6 +72,7 @@ void mutableListSequenceTests() {
                         return seq;
                     }
             )
+            */
     };
 
     util::forEach(tests, [](auto test) { test(); });

@@ -51,19 +51,16 @@ add_library(NativeLib SHARED
         jni/nativelib.cpp
         pointer/WeakPtr.h
         test/pointerTests/weak/WeakPtrTests.cpp
-        test/pointerTests/weak/WeakPtrTests.h
         test/mutableListSeq/MutableListSequenceUnqPtrTests.cpp
-        test/mutableListSeq/MutableListSequenceUnqPtrTests.h
-        test/pointerTests/unq/UnqPtrLoadTest.h
         test/pointerTests/unq/UnqPtrLoadTest.cpp
         test/pointerTests/smrt/SmrtPtrLoadTest.cpp
-        test/pointerTests/smrt/SmrtPtrLoadTest.h
         test/pointerTests/shrd/ShrdPtrLoadTest.cpp
-        test/pointerTests/shrd/ShrdPtrLoadTest.h
         test/pointerTests/weak/WeakPtrLoadTest.cpp
-        test/pointerTests/weak/WeakPtrLoadTest.h
         test/hashmap/HashMapTests.cpp
-        test/hashmap/HashMapTests.h
+        test/hashmap/HashMapTest.cpp
+        test/hashmap/HashMapTest.h
+        test/dict/DictionaryTest.cpp
+        test/dict/DictionaryTests.cpp
 )
 
 target_include_directories(NativeLib PRIVATE ${JNI_INCLUDE_DIRS})
@@ -97,6 +94,9 @@ add_library(SorterService SHARED
         test/array/DynamicArrayTests.cpp
         test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
         jni/SorterServiceJNI.cpp
+        test/dict/DictionaryTest.cpp
+        test/dict/DictionaryTests.cpp
+
 )
 
 target_include_directories(SorterService PRIVATE ${JNI_INCLUDE_DIRS})
@@ -110,6 +110,7 @@ set_target_properties(SorterService PROPERTIES
 # Executable
 add_executable(PointersExec
         main.cpp
+
 )
 
 target_link_libraries(PointersExec PRIVATE SorterService NativeLib)

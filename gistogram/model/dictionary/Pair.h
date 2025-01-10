@@ -12,11 +12,11 @@ public:
     Pair(const K &key, const V &value): _key(key), _value(value) {
     }
 
-    K getKey() {
+    K getKey() const {
         return _key;
     }
 
-    V getValue() {
+    V getValue() const{
         return _value;
     }
 

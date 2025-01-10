@@ -9,4 +9,6 @@ void runCreateUIArray();
 void runCreateUIList();
 void runSequenceTestsUI();
 void runUISorts();
+void runUIGraf();
+void runGistTestsUI();
 #endif //LABA1_UI_H

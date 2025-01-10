@@ -49,6 +49,15 @@ public:
         std::copy(initList.begin(), initList.end(), _items.getValue());
     }
 
+    DynamicArray<T>& operator=(const DynamicArray<T>& other) {
+    if (this != &other) {
+        _capacity = other._capacity;
+        _size = other._size;
+        _items = UnqPtr<T[]>(new T[other._capacity]);
+        std::copy(other._items.getValue(), other._items.getValue() + other._size, _items.getValue());
+    }
+    return *this;
+}
 
     DynamicArray<T>& operator=(DynamicArray<T>&& other) noexcept {
         if (this != &other) {
@@ -64,6 +73,26 @@ public:
     size_t size() const {
         return _size;
     }
+
+    void resize(size_t newSize) {
+    UnqPtr<T[]> newItems(new T[newSize]);
+    if (_size > newSize) {
+        _size = newSize;
+    }
+    std::move(_items.getValue(), _items.getValue() + _size, newItems.getValue());
+    _items = std::move(newItems);
+    _capacity = newSize;
+    }
+
+
+
+    void setSize(size_t newSize) {
+    if (newSize > _capacity) {
+        throw std::invalid_argument("New size should not exceed capacity");
+    }
+    _size = newSize;
+    }
+
 
     size_t capacity() const {
         return _capacity;
@@ -115,13 +144,7 @@ public:
         ++_size;
     }
 
-    void resize(size_t newCapacity) {
-        if (newCapacity < _size) _size = newCapacity;
-        UnqPtr<T[]> newItems(new T[newCapacity]);
-        std::move(_items.getValue(), _items.getValue() + _size, newItems.getValue());
-        _items = std::move(newItems);
-        _capacity = newCapacity;
-    }
+
 
     void shrink_to_fit() {
         if (_capacity > _size) {

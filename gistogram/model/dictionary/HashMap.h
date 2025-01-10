@@ -9,7 +9,7 @@ private:
     DynamicArray<DynamicArray<V>> _values;
     DynamicArray<DynamicArray<K>> _keys;
     size_t _size;
-
+/*
     size_t hashCode(const K &key) const {
         size_t hash = 0;
         K k = key;
@@ -19,6 +19,30 @@ private:
         }
         return hash % _size;
     }
+
+    size_t hashCode(const K &key) const {
+    return std::hash<K>{}(key) % _size;
+}
+*/
+
+size_t hashCode(const K& key) const {
+    if constexpr (std::is_integral<K>::value || std::is_floating_point<K>::value) {
+        return static_cast<size_t>(key) % _size;
+    }
+    else if constexpr (std::is_same<K, std::string>::value) {
+        size_t hash = 0;
+        for (char c : key) {
+            hash = hash * 31 + static_cast<size_t>(c);
+        }
+        return hash % _size;
+    }
+    else {
+        const void* ptr = static_cast<const void*>(&key);
+        size_t hash = reinterpret_cast<size_t>(ptr);
+        return hash % _size;
+    }
+}
+
 
 public:
     HashMap(): _size(1001) {

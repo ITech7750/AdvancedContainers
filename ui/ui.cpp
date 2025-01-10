@@ -22,8 +22,59 @@
 #include "../test/graph/graphTests.h"
 #include "../test/graph/undirectedGraphTest.h"
 #include "../test/hashmap/HashMapTests.h"
+#include "../test/hashmap/HashMapTest.h"
+#include "../test/dict/DictionaryTest.h"
+#include "../test/dict/DictionaryTests.h"
 #include <iostream>
 
+void runGistTestsUI() {
+    int choice;
+    constexpr size_t TEST_SIZE = 100000;
+    constexpr size_t STRING_LENGTH = 10;
+    DictionaryTest testDict(10000, 10);
+    HashMapTest testHash(TEST_SIZE, STRING_LENGTH);
+    std::cout << "\n=== Меню тестов gistogram ===\n";
+    std::cout << "1. Тест HashMap\n";
+    std::cout << "2. Запуск нагрузочных тестов HashMap...\n";
+    std::cout << "3. Тест Dictionary\n";
+    std::cout << "4. Запуск нагрузочных тестов Dictionary...\n";
+    std::cout << "0. Вернуться в главное меню\n";
+    std::cout << "Введите ваш выбор: ";
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1:
+            std::cout << "Запуск теста HashMap...\n";
+            {
+                HashMapTests hashMapTests;
+                hashMapTests.runAllTests();
+            }
+            break;
+        case 2:
+            std::cout << "Запуск нагрузочных тестов HashMap...\n";
+            testHash.testInsert();
+            testHash.testGet();
+            testHash.testContains();
+            break;
+        case 3:
+            std::cout << "Запуск теста Dictionary...\n";
+            {
+                DictionaryTests dictTests;
+                dictTests.runAllTests();
+            }
+            break;
+        case 4:
+            std::cout << "Запуск нагрузочных тестов Dictionary...\n";
+            testDict.testAdd();
+            testDict.testGet();
+            testDict.testStatistic();
+            break;
+        case 0:
+            return;
+        default:
+            std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+    }
+}
 
 void runPointerTestsUI() {
     int choice;
@@ -400,7 +451,8 @@ void runUI() {
         std::cout << "2. Тесты последовательностей\n";
         std::cout << "3. Тесты сортировок\n";
         std::cout << "4. Тесты графов\n";
-        std::cout << "5. Выход\n";
+        std::cout << "5. Тесты HashMap Dict и пр.\n";
+        std::cout << "6. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
         switch (choice) {
@@ -416,6 +468,8 @@ void runUI() {
             case 4:
                 runUIGraf();
             case 5:
+                runGistTestsUI();
+            case 6:
                 std::cout << "Завершение программы...\n";
                 break;
             default:

@@ -6,7 +6,6 @@
 #include "../../../data/Person.h"
 #include "HashMap.h"
 #include <functional>
-
 template <class K, class V>
 class Dictionary {
 private:
@@ -20,7 +19,7 @@ public:
     void add(Pair<K, V> pair) {
         DynamicArray<V> tmp;
         if (!data.contains(pair.getKey())) {
-            tmp = Array<V>();
+            tmp = DynamicArray<V>();
         } else {
             tmp = data.get(pair.getKey());
         }
@@ -40,11 +39,11 @@ public:
         }
     }
 
-    std::vector<V> get(const K &key) {
+    DynamicArray<V> get(const K &key) {
         if (data.contains(key)) {
-            return data[key];
+            return data.get(key);
         } else {
-            return std::vector<V>();
+            return DynamicArray<V>();
         }
     }
 

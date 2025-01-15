@@ -1,4 +1,5 @@
 #include "DictionaryTest.h"
+
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -10,13 +11,16 @@ DictionaryTest::DictionaryTest(size_t testSize, size_t stringLength)
     : _testSize(testSize), _stringLength(stringLength) {}
 
 std::string DictionaryTest::generateRandomString(size_t length) {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const size_t maxIndex = sizeof(charset) - 1;
-    std::string str;
+    static std::mt19937 generator(std::random_device{}());
+    static const char charset[] =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    static std::uniform_int_distribution<size_t> dist(0, sizeof(charset) - 2);
+    std::string result;
+    result.reserve(length);
     for (size_t i = 0; i < length; ++i) {
-        str += charset[rand() % maxIndex];
+        result += charset[dist(generator)];
     }
-    return str;
+    return result;
 }
 
 void DictionaryTest::testAdd() {
@@ -101,6 +105,14 @@ void DictionaryTest::testStatistic() {
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Custom Dictionary statistic calculation time: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+              << " ms\n";
+
+    // Testing for all statistics
+    start = std::chrono::high_resolution_clock::now();
+    customDictionary.addStatisticForAll([](int a, int b) { return a + b; });
+    end = std::chrono::high_resolution_clock::now();
+    std::cout << "Custom Dictionary all statistics calculation time: "
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
               << " ms\n";
 }

@@ -49,7 +49,6 @@ add_library(NativeLib SHARED
         test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
         jni/SorterServiceJNI.cpp
         jni/nativelib.cpp
-        pointer/WeakPtr.h
         test/pointerTests/weak/WeakPtrTests.cpp
         test/mutableListSeq/MutableListSequenceUnqPtrTests.cpp
         test/pointerTests/unq/UnqPtrLoadTest.cpp
@@ -58,9 +57,10 @@ add_library(NativeLib SHARED
         test/pointerTests/weak/WeakPtrLoadTest.cpp
         test/hashmap/HashMapTests.cpp
         test/hashmap/HashMapTest.cpp
-        test/hashmap/HashMapTest.h
         test/dict/DictionaryTest.cpp
         test/dict/DictionaryTests.cpp
+        test/gistogram/GistogramTests.cpp
+        test/gistogram/GistogramTests.h
 )
 
 target_include_directories(NativeLib PRIVATE ${JNI_INCLUDE_DIRS})

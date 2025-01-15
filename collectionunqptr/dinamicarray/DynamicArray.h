@@ -38,6 +38,7 @@ public:
         std::copy(other._items.getValue(), other._items.getValue() + other._size, _items.getValue());
     }
 
+
     DynamicArray(DynamicArray<T>&& other) noexcept
         : _capacity(other._capacity), _size(other._size), _items(std::move(other._items)) {
         other._capacity = 0;

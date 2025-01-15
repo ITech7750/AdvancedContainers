@@ -1,117 +1,113 @@
 #include "HashMapTest.h"
 #include "../../gistogram/model/dictionary/HashMap.h"
-#include <iostream>
 #include <unordered_map>
-#include <vector>
+#include <iostream>
 #include <chrono>
-#include <random>
+#include <cassert>
 
 HashMapTest::HashMapTest(size_t testSize, size_t stringLength)
     : _testSize(testSize), _stringLength(stringLength) {}
 
 std::string HashMapTest::generateRandomString(size_t length) {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const size_t maxIndex = sizeof(charset) - 1;
-    std::string str;
-    for (size_t i = 0; i < length; ++i) {
-        str += charset[rand() % maxIndex];
-    }
-    return str;
-}
+    static const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    std::string result;
+    result.resize(length);
 
+    for (size_t i = 0; i < length; ++i) {
+        result[i] = charset[rand() % (sizeof(charset) - 1)];
+    }
+
+    return result;
+}
 
 void HashMapTest::testInsert() {
-    std::vector<std::pair<std::string, int>> testData;
+    HashMap<int, std::string> map;
     for (size_t i = 0; i < _testSize; ++i) {
-        testData.emplace_back(generateRandomString(_stringLength), rand() % 1000);
+        map.put(i, generateRandomString(_stringLength));
     }
-
-    HashMap<std::string, int> customMap(_testSize);
-    std::unordered_map<std::string, int> stdMap;
-
-    auto start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        customMap.insert(key, value);
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "Custom HashMap insert time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
-
-
-    start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        stdMap[key] = value;
-    }
-    end = std::chrono::high_resolution_clock::now();
-    std::cout << "std::unordered_map insert time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+    std::cout << "Custom HashMap insert test completed.\n";
 }
 
-
 void HashMapTest::testGet() {
-    std::vector<std::pair<std::string, int>> testData;
+    HashMap<int, std::string> map;
     for (size_t i = 0; i < _testSize; ++i) {
-        testData.emplace_back(generateRandomString(_stringLength), rand() % 1000);
+        map.put(i, generateRandomString(_stringLength));
     }
 
-    HashMap<std::string, int> customMap(_testSize);
-    std::unordered_map<std::string, int> stdMap;
-
-    for (const auto& [key, value] : testData) {
-        customMap.insert(key, value);
-        stdMap[key] = value;
+    std::string value;
+    for (size_t i = 0; i < _testSize; ++i) {
+        assert(map.get(i, value));
     }
-
-    auto start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        customMap.get(key);
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "Custom HashMap get time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
-
-    start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        stdMap.at(key);
-    }
-    end = std::chrono::high_resolution_clock::now();
-    std::cout << "std::unordered_map get time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+    std::cout << "Custom HashMap get test completed.\n";
 }
 
 void HashMapTest::testContains() {
-    std::vector<std::pair<std::string, int>> testData;
+    HashMap<int, std::string> map;
     for (size_t i = 0; i < _testSize; ++i) {
-        testData.emplace_back(generateRandomString(_stringLength), rand() % 1000);
+        map.put(i, generateRandomString(_stringLength));
     }
 
-    HashMap<std::string, int> customMap(_testSize);
-    std::unordered_map<std::string, int> stdMap;
-
-    for (const auto& [key, value] : testData) {
-        customMap.insert(key, value);
-        stdMap[key] = value;
+    for (size_t i = 0; i < _testSize; ++i) {
+        assert(map.containsKey(i));
     }
+    std::cout << "Custom HashMap contains test completed.\n";
+}
+
+void HashMapTest::testRemove() {
+    HashMap<int, std::string> map;
+    for (size_t i = 0; i < _testSize; ++i) {
+        map.put(i, generateRandomString(_stringLength));
+    }
+
+    for (size_t i = 0; i < _testSize; ++i) {
+        map.remove(i);
+    }
+    assert(map.isEmpty());
+    std::cout << "Custom HashMap remove test completed.\n";
+}
+
+void HashMapTest::runAllTests() {
+    testInsert();
+    testGet();
+    testContains();
+    testRemove();
+    compareWithStdUnorderedMap();
+}
+
+void HashMapTest::compareWithStdUnorderedMap() {
+    std::unordered_map<int, std::string> stdMap;
+    HashMap<int, std::string> customMap;
 
     auto start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        customMap.contains(key);
+    for (size_t i = 0; i < _testSize; ++i) {
+        stdMap[i] = generateRandomString(_stringLength);
     }
     auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "Custom HashMap contains time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+    std::chrono::duration<double> stdInsertTime = end - start;
+    std::cout << "std::unordered_map insertion time: " << stdInsertTime.count() << " seconds\n";
 
     start = std::chrono::high_resolution_clock::now();
-    for (const auto& [key, value] : testData) {
-        stdMap.count(key);
+    for (size_t i = 0; i < _testSize; ++i) {
+        customMap.put(i, generateRandomString(_stringLength));
     }
     end = std::chrono::high_resolution_clock::now();
-    std::cout << "std::unordered_map contains time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+    std::chrono::duration<double> customInsertTime = end - start;
+    std::cout << "Custom HashMap insertion time: " << customInsertTime.count() << " seconds\n";
+    
+    start = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < _testSize; ++i) {
+        std::string value = stdMap[i];
+    }
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> stdGetTime = end - start;
+    std::cout << "std::unordered_map retrieval time: " << stdGetTime.count() << " seconds\n";
+
+    std::string value;
+    start = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < _testSize; ++i) {
+        assert(customMap.get(i, value));
+    }
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> customGetTime = end - start;
+    std::cout << "Custom HashMap retrieval time: " << customGetTime.count() << " seconds\n";
 }

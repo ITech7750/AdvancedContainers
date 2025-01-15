@@ -3,6 +3,7 @@
 
 #include "../BaseSorter.h"
 
+//что такое двоичная куча?
 template<typename T>
 class HeapSorter : public BaseSorter<T> {
 public:

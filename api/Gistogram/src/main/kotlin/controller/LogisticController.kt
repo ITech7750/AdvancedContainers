@@ -70,7 +70,7 @@ class LogisticController(private val service: LogisticService) {
     }
 
     @PostMapping("/bag")
-    @Operation(summary = "Создать сумку", description = "Создает данные сумки с заданными параметрами")
+    @Operation(summary = "Создать gistoram bag", description = "Создает данные сумки с заданными параметрами")
     fun buildBag(
         @RequestParam path: String,
         @RequestParam amount: Int,

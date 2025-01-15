@@ -91,7 +91,7 @@ JNIEXPORT jobject JNICALL Java_org_example_sorter_SorterService_getSortedByAge
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_example_sorter_SorterService_sortByName(JNIEnv* env, jclass clazz, jstring fileName, jboolean isJson, jstring algorithm) {
+_org_example_sorter_SorterService_sortByNameJava(JNIEnv* env, jclass clazz, jstring fileName, jboolean isJson, jstring algorithm) {
     const char* fileNameCStr = env->GetStringUTFChars(fileName, nullptr);
     const char* algorithmCStr = env->GetStringUTFChars(algorithm, nullptr);
 

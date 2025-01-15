@@ -14,6 +14,8 @@ public:
     }
 
 private:
+    //выделить доп. память один раз при самом первом вызове (на N элементов)
+    //передавать левую и правую границу
     void mergeSort(MutableSequence<T>* seq, int left, int right, int (*cmp)(const T&, const T&)) {
         if (left >= right) return;
 

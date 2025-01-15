@@ -397,10 +397,10 @@ curl -X POST http://localhost:8080/api/logistics/road \
   "length": "15.5",
   "maxSpeed": "100",
   "start": {
-    "id": 1
+    "id": 2
   },
   "end": {
-    "id": 2
+    "id": 3
   }
 }'
 ```
@@ -435,7 +435,7 @@ curl -X POST http://localhost:8080/api/logistics/road \
 #### Пример запроса:
 ```bash
 curl -X POST "http://localhost:8080/api/logistics/vertex" \
--d "resultFilePath=/tmp/vertex_result.txt" \
+-d "resultFilePath=/home/itech/Desktop/University/AdvancedContainers/api/Gistogram/src/main/kotlin/data/mock/logistics_result.txt" \
 -d "cityAmount=15" \
 -d "roadAmount=25"
 ```

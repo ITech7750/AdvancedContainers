@@ -27,10 +27,54 @@
 #include "../test/dict/DictionaryTests.h"
 #include <iostream>
 
+
+
+#include "../gistogram/model/dictionary/HashMap.h"
+#include "../gistogram/model/dictionary/Dictionary.h"
+#include <iostream>
+#include <string>
+
+
+
 void runGistTestsUI() {
+    int choice;
+
+    while (true) {
+        std::cout << "\n=== Главное меню ===\n";
+        std::cout << "1. Работа с HashMap\n";
+        std::cout << "2. Работа с Dictionary\n";
+        std::cout << "3. Тесты Hash Map и Dictionary\n";
+        std::cout << "0. Выход\n";
+        std::cout << "Введите ваш выбор: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                runHashMapUI();
+                break;
+            case 2:
+                runDictionaryUI();
+                break;
+            case 3:
+                runGistTestsUITest();
+            break;
+            case 0:
+                return;
+            default:
+                std::cout << "Некорректный ввод. Пожалуйста, попробуйте снова.\n";
+        }
+    }
+}
+
+
+
+
+
+void runGistTestsUITest() {
     int choice;
     constexpr size_t TEST_SIZE = 100000;
     constexpr size_t STRING_LENGTH = 10;
+
     DictionaryTest testDict(10000, 10);
     HashMapTest testHash(TEST_SIZE, STRING_LENGTH);
     std::cout << "\n=== Меню тестов gistogram ===\n";
@@ -52,15 +96,15 @@ void runGistTestsUI() {
             break;
         case 2:
             std::cout << "Запуск нагрузочных тестов HashMap...\n";
-            testHash.testInsert();
-            testHash.testGet();
-            testHash.testContains();
+            testHash.runAllTests();
+
             break;
         case 3:
             std::cout << "Запуск теста Dictionary...\n";
             {
                 DictionaryTests dictTests;
                 dictTests.runAllTests();
+
             }
             break;
         case 4:
@@ -68,13 +112,189 @@ void runGistTestsUI() {
             testDict.testAdd();
             testDict.testGet();
             testDict.testStatistic();
+
             break;
         case 0:
             return;
         default:
             std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
     }
+
 }
+
+
+
+void runHashMapUI() {
+    HashMap<std::string, int> hashMap;
+    int choice;
+
+    while (true) {
+        try {
+            std::cout << "\n=== Работа с HashMap ===\n";
+            std::cout << "1. Добавить пару (ключ, значение)\n";
+            std::cout << "2. Получить значение по ключу\n";
+            std::cout << "3. Проверить наличие ключа\n";
+            std::cout << "4. Удалить ключ\n";
+            std::cout << "5. Показать все ключи и значения\n";
+            std::cout << "0. Вернуться в главное меню\n";
+            std::cout << "Введите ваш выбор: ";
+            std::cin >> choice;
+
+            if (std::cin.fail()) throw std::invalid_argument("Некорректный ввод. Попробуйте снова.");
+
+            switch (choice) {
+                case 1: {
+                    std::string key;
+                    int value;
+                    std::cout << "Введите ключ (строка): ";
+                    std::cin >> key;
+                    std::cout << "Введите значение (целое число): ";
+                    std::cin >> value;
+                    if (std::cin.fail()) throw std::invalid_argument("Некорректное значение. Попробуйте снова.");
+                    hashMap.put(key, value);
+                    std::cout << "Пара добавлена.\n";
+                    break;
+                }
+                case 2: {
+                    std::string key;
+                    std::cout << "Введите ключ для поиска: ";
+                    std::cin >> key;
+                    if (hashMap.containsKey(key)) {
+                        std::cout << "Значение: " << hashMap.get(key) << "\n";
+                    } else {
+                        std::cout << "Ключ не найден.\n";
+                    }
+                    break;
+                }
+                case 3: {
+                    std::string key;
+                    std::cout << "Введите ключ для проверки: ";
+                    std::cin >> key;
+                    std::cout << (hashMap.containsKey(key) ? "Ключ существует.\n" : "Ключ не найден.\n");
+                    break;
+                }
+                case 4: {
+                    std::string key;
+                    std::cout << "Введите ключ для удаления: ";
+                    std::cin >> key;
+                    hashMap.remove(key);
+                    std::cout << "Ключ удален (если существовал).\n";
+                    break;
+                }
+                case 5: {
+                    auto keys = hashMap.getKeys();
+                    auto values = hashMap.getValues();
+                    for (size_t i = 0; i < keys.size(); ++i) {
+                        std::cout << keys[i] << ": " << values[i] << "\n";
+                    }
+                    break;
+                }
+                case 0:
+                    return;
+                default:
+                    std::cout << "Некорректный ввод. Пожалуйста, попробуйте снова.\n";
+            }
+        } catch (const std::exception& e) {
+            std::cout << "Ошибка: " << e.what() << "\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+void runDictionaryUI() {
+    Dictionary<std::string, int> dictionary;
+    int choice;
+
+    while (true) {
+        try {
+            std::cout << "\n=== Работа с Dictionary ===\n";
+            std::cout << "1. Добавить пару (ключ, значение)\n";
+            std::cout << "2. Получить значения по ключу\n";
+            std::cout << "3. Добавить статистику для ключа\n";
+            std::cout << "4. Удалить ключ\n";
+            std::cout << "5. Показать все данные\n";
+            std::cout << "0. Вернуться в главное меню\n";
+            std::cout << "Введите ваш выбор: ";
+            std::cin >> choice;
+
+            if (std::cin.fail()) throw std::invalid_argument("Некорректный ввод. Попробуйте снова.");
+
+            switch (choice) {
+                case 1: {
+                    std::string key;
+                    int value;
+                    std::cout << "Введите ключ (строка): ";
+                    std::cin >> key;
+                    std::cout << "Введите значение (целое число): ";
+                    std::cin >> value;
+                    if (std::cin.fail()) throw std::invalid_argument("Некорректное значение. Попробуйте снова.");
+                    dictionary.add(Pair<std::string, int>(key, value));
+                    std::cout << "Пара добавлена.\n";
+                    break;
+                }
+                case 2: {
+                    std::string key;
+                    std::cout << "Введите ключ для поиска: ";
+                    std::cin >> key;
+                    if (dictionary.containsKey(key)) {
+                        auto values = dictionary.get(key);
+                        std::cout << "Значения: ";
+                        for (const auto& val : values) {
+                            std::cout << val << " ";
+                        }
+                        std::cout << "\n";
+                    } else {
+                        std::cout << "Ключ не найден.\n";
+                    }
+                    break;
+                }
+                case 3: {
+                    std::string key;
+                    std::cout << "Введите ключ для добавления статистики: ";
+                    std::cin >> key;
+                    dictionary.addStatistic(key, [](int a, int b) { return a + b; });
+                    std::cout << "Статистика добавлена для ключа.\n";
+                    break;
+                }
+                case 4: {
+                    std::string key;
+                    std::cout << "Введите ключ для удаления: ";
+                    std::cin >> key;
+                    dictionary.remove(key);
+                    std::cout << "Ключ удален (если существовал).\n";
+                    break;
+                }
+                case 5: {
+                    if (dictionary.isEmpty()) {
+                        std::cout << "Словарь пуст.\n";
+                    } else {
+                        std::cout << "Содержимое словаря:\n";
+                        for (auto it = dictionary.begin(); it != dictionary.end(); ++it) {
+                            const auto& entry = *it;
+                            const auto& key = entry.getKey();
+                            const auto& value = entry.getValue();
+                            std::cout << key << ": " << value << "\n";
+                        }
+                    }
+                    break;
+                }
+
+                case 0:
+                    return;
+                default:
+                    std::cout << "Некорректный ввод. Пожалуйста, попробуйте снова.\n";
+            }
+        } catch (const std::exception& e) {
+            std::cout << "Ошибка: " << e.what() << "\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+
+
 
 void runPointerTestsUI() {
     int choice;
@@ -451,7 +671,7 @@ void runUI() {
         std::cout << "2. Тесты последовательностей\n";
         std::cout << "3. Тесты сортировок\n";
         std::cout << "4. Тесты графов\n";
-        std::cout << "5. Тесты HashMap Dict и пр.\n";
+        std::cout << "5. Работа с HashMap Dict и пр.\n";
         std::cout << "6. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;

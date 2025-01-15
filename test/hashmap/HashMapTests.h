@@ -1,16 +1,23 @@
-#ifndef HASHMAPTESTS_H
-#define HASHMAPTESTS_H
+#ifndef LABA3_HASHMAPTESTS_H
+#define LABA3_HASHMAPTESTS_H
 
 class HashMapTests {
 public:
-    static void runAllTests();
+    void runAllTests();
+
 private:
-    static void testInsertAndGet();
-    static void testInsertDuplicateKey();
-    static void testContains();
-    static void testOperatorAccess();
-    static void testGetKeys();
-    static void testGetNonExistentKey();
+    void testPut();
+    void testGet();
+    void testContainsKey();
+    void testRemove();
+    void testSize();
+    void testIsEmpty();
+    void testClear();
+    void testRehashing();
+    void testIterator();
+    void testIteratorEmptyMap();
+    void testIteratorAfterClear();
+    void testIteratorRehashing();
 };
 
-#endif // HASHMAPTESTS_H
+#endif // LABA3_HASHMAPTESTS_H

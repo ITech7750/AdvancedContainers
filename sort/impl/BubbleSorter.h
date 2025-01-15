@@ -6,6 +6,9 @@
 template<typename T>
 class BubbleSorter : public BaseSorter<T> {
 public:
+    /*
+     *до до -i элеиента
+     */
     void Sort(MutableSequence<T>* seq, int (*cmp)(const T&, const T&)) override {
         int n = seq->size();
         bool swapped;

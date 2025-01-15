@@ -2,130 +2,275 @@
 #define LABA3_HASHMAP_H
 
 #include "../../../collectionunqptr/dinamicarray/DynamicArray.h"
+#include "Pair.h"
+#include "utils/HashUtil.h"
+#include <functional>
 
-template <class K, class V>
+constexpr double MAX_LOAD_FACTOR = 0.75;
+constexpr double MIN_LOAD_FACTOR = 0.25;
+constexpr size_t INITIAL_CAPACITY = 8;
+
+template<class K, class V>
 class HashMap {
 private:
-    DynamicArray<DynamicArray<V>> _values;
-    DynamicArray<DynamicArray<K>> _keys;
-    size_t _size;
-/*
-    size_t hashCode(const K &key) const {
-        size_t hash = 0;
-        K k = key;
-        String *raw = reinterpret_cast<String*>(&k);
-        for (char c: *raw) {
-            hash = hash * 31 + c;
+    class Node {
+    public:
+        Pair<K, V> pair;
+        UnqPtr<Node> next;
+
+        Node(const Pair<K, V>& pair, UnqPtr<Node>&& next = nullptr)
+            : pair(pair), next(std::move(next)) {}
+    };
+
+    DynamicArray<UnqPtr<Node>> buckets;
+
+    size_t size_;
+
+    size_t hashFunction(const K& key) const {
+        return HashUtil::hashValue(key);
+    }
+
+    void resize(size_t newCapacity) {
+        DynamicArray<UnqPtr<Node>> newBuckets(newCapacity);
+        for (size_t i = 0; i < newBuckets.size(); ++i) {
+            newBuckets.set(i, nullptr);
         }
-        return hash % _size;
-    }
 
-    size_t hashCode(const K &key) const {
-    return std::hash<K>{}(key) % _size;
-}
-*/
-
-size_t hashCode(const K& key) const {
-    if constexpr (std::is_integral<K>::value || std::is_floating_point<K>::value) {
-        return static_cast<size_t>(key) % _size;
-    }
-    else if constexpr (std::is_same<K, std::string>::value) {
-        size_t hash = 0;
-        for (char c : key) {
-            hash = hash * 31 + static_cast<size_t>(c);
+        for (size_t i = 0; i < buckets.size(); ++i) {
+            UnqPtr<Node> current = std::move(buckets[i]);
+            while (current) {
+                size_t newIndex = hashFunction(current->pair.getKey()) % newCapacity;
+                UnqPtr<Node> nextNode = std::move(current->next);
+                current->next = std::move(newBuckets[newIndex]);
+                newBuckets.set(newIndex, std::move(current));
+                current = std::move(nextNode);
+            }
         }
-        return hash % _size;
-    }
-    else {
-        const void* ptr = static_cast<const void*>(&key);
-        size_t hash = reinterpret_cast<size_t>(ptr);
-        return hash % _size;
-    }
-}
 
+        buckets = std::move(newBuckets);
+    }
+
+    void ensureCapacity() {
+        if (static_cast<double>(size_) / buckets.size() > MAX_LOAD_FACTOR) {
+            resize(buckets.size() * 2);
+        }
+    }
+
+    void shrinkCapacity() {
+        if (static_cast<double>(size_) / buckets.size() < MIN_LOAD_FACTOR && buckets.size() > INITIAL_CAPACITY) {
+            resize(buckets.size() / 2);
+        }
+    }
 
 public:
-    HashMap(): _size(1001) {
-        _keys.resize(1001);
-        _values.resize(1001);
-        _keys.setSize(1001);
-        _values.setSize(1001);
+    HashMap() : buckets(INITIAL_CAPACITY), size_(0) {
+        for (size_t i = 0; i < buckets.size(); ++i) {
+            buckets.set(i, nullptr);
+        }
     }
 
-    HashMap(size_t size): _size(size) {
-        _keys.resize(size);
-        _values.resize(size);
-        _keys.setSize(size);
-        _values.setSize(size);
+    ~HashMap() {
+        clear();
     }
 
-    // по ссылке менять значение
-    void insert(const K &key, const V &value) {
-        size_t hash = hashCode(key);
-        auto hashKeys = _keys.get(hash);
-        auto hashValues = _values.get(hash);
-        bool presented = false;
-        for (int i = 0;i<hashKeys.size();i++) {
-            if (hashKeys[i] == key) {
-                hashValues.set(i, value);
-                presented = true;
+    void put(const K& key, const V& value) {
+        size_t index = hashFunction(key) % buckets.size();
+        Node* current = buckets[index].getValue();
+        while (current) {
+            if (current->pair.getKey() == key) {
+                current->pair = Pair<K, V>(key, value);
+                return;
             }
+            current = current->next.getValue();
         }
-        if (!presented) {
-            hashKeys.add(key);
-            hashValues.add(value);
-        }
-        _keys.set(hash, hashKeys);
-        _values.set(hash, hashValues);
+
+        buckets.set(index, new Node(Pair<K, V>(key, value), std::move(buckets[index])));
+        ++size_;
+        ensureCapacity();
     }
 
-    //возвращать указатель на узел
-    V get(const K& key) {
-        size_t hash = hashCode(key);
-        auto hashKeys = _keys.get(hash);
-        for (int i = 0;i<hashKeys.size();i++) {
-            if (hashKeys[i] == key) {
-                return _values.get(hash)[i];
-            }
-        }
-        throw std::exception();
-    }
-
-    V operator[](const K& key) {
-        size_t hash = hashCode(key);
-        auto hashKeys = _keys.get(hash);
-        for (int i = 0;i<hashKeys.size();i++) {
-            if (hashKeys[i] == key) {
-                V tmp = _values.get(hash)[i];
-                return tmp;
-            }
-        }
-        throw std::exception();
-    }
-
-    bool contains(const K& key) {
-        size_t hash = hashCode(key);
-        auto hashKeys = _keys.get(hash);
-        for (int i = 0;i<hashKeys.size();i++) {
-            if (hashKeys[i] == key) {
+    bool get(const K& key, V& value) const {
+        size_t index = hashFunction(key) % buckets.size();
+        Node* current = buckets[index].getValue();
+        while (current) {
+            if (current->pair.getKey() == key) {
+                value = current->pair.getValue();
                 return true;
             }
+            current = current->next.getValue();
         }
         return false;
     }
 
-    DynamicArray<K> getKeys() {
-        DynamicArray<K> tmp;
-        for (size_t i = 0;i<_size;i++) {
-            DynamicArray<K> k = _keys[i];
-            for (size_t j = 0;j<k.size();j++) {
-                tmp.add(k[j]);
-            }
+    V get(const K& key) const {
+        V value;
+        if (get(key, value)) {
+            return value;
         }
-        return tmp;
+        throw std::runtime_error("Key not found");
+    }
+
+    bool containsKey(const K& key) const {
+        size_t index = hashFunction(key) % buckets.size();
+        Node* current = buckets[index].getValue();
+        while (current) {
+            if (current->pair.getKey() == key) {
+                return true;
+            }
+            current = current->next.getValue();
+        }
+        return false;
+    }
+
+    void remove(const K& key) {
+        size_t index = hashFunction(key) % buckets.size();
+        Node* current = buckets[index].getValue();
+        Node* prev = nullptr;
+
+        while (current) {
+            if (current->pair.getKey() == key) {
+                if (prev) {
+                    prev->next = std::move(current->next);
+                } else {
+                    buckets.set(index, std::move(current->next));
+                }
+                --size_;
+                shrinkCapacity();
+                return;
+            }
+            prev = current;
+            current = current->next.getValue();
+        }
+    }
+
+    size_t size() const {
+        return size_;
+    }
+
+    bool isEmpty() const {
+        return size_ == 0;
+    }
+
+    V operator[](const K& key) const {
+        return get(key);
     }
 
 
+
+
+    DynamicArray<K> getKeys() const {
+        DynamicArray<K> keys;
+        for (size_t i = 0; i < buckets.size(); ++i) {
+            Node* current = buckets[i].getValue();
+            while (current) {
+                keys.add(current->pair.getKey());
+                current = current->next.getValue();
+            }
+        }
+        return keys;
+    }
+
+    DynamicArray<V> getValues() const {
+        DynamicArray<V> values;
+        for (size_t i = 0; i < buckets.size(); ++i) {
+            Node* current = buckets[i].getValue();
+            while (current) {
+                values.add(current->pair.getValue());
+                current = current->next.getValue();
+            }
+        }
+        return values;
+    }
+
+
+    class Iterator {
+    private:
+        const DynamicArray<UnqPtr<Node>>& buckets;
+        size_t bucketIndex;
+        Node* currentNode;
+
+        void advanceToNextValidBucket() {
+            while (bucketIndex < buckets.size() && !buckets[bucketIndex]) {
+                ++bucketIndex;
+            }
+            currentNode = (bucketIndex < buckets.size()) ? buckets[bucketIndex].getValue() : nullptr;
+        }
+
+    public:
+        Iterator(const DynamicArray<UnqPtr<Node>>& buckets, size_t start = 0)
+            : buckets(buckets), bucketIndex(start), currentNode(nullptr) {
+            advanceToNextValidBucket();
+        }
+
+        bool hasNext() const {
+            return currentNode != nullptr;
+        }
+
+        void next() {
+            if (!hasNext()) {
+                throw std::out_of_range("Iterator out of range");
+            }
+            currentNode = currentNode->next ? currentNode->next.getValue() : nullptr;
+            if (!currentNode) {
+                ++bucketIndex;
+                advanceToNextValidBucket();
+            }
+        }
+
+
+        const Pair<K, V>& current() const {
+            if (!currentNode) {
+                throw std::out_of_range("Iterator out of range");
+            }
+            return currentNode->pair;
+        }
+
+
+        Iterator& operator++() {
+            next();
+            return *this;
+        }
+
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            next();
+            return temp;
+        }
+
+        const Pair<K, V>& operator*() const {
+            return current();
+        }
+
+        const Pair<K, V>* operator->() const {
+            return &current();
+        }
+
+        bool operator==(const Iterator& other) const {
+            return currentNode == other.currentNode && bucketIndex == other.bucketIndex;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return !(*this == other);
+        }
+
+    };
+
+    Iterator begin() const {
+        return Iterator(buckets, 0);
+    }
+
+    Iterator end() const {
+        return Iterator(buckets, buckets.size());
+    }
+
+
+
+    void clear() {
+        for (size_t i = 0; i < buckets.size(); ++i) {
+            buckets.set(i, nullptr);
+        }
+        size_ = 0;
+    }
 };
 
-#endif //LABA3_HASHMAP_H
+#endif // LABA3_HASHMAP_H

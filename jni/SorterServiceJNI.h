@@ -16,6 +16,9 @@ extern "C" {
     JNIEXPORT jobject JNICALL Java_org_example_sorter_SorterService_getSortedByAge
       (JNIEnv *, jclass, jstring, jboolean, jstring);
 
+    JNIEXPORT jobject JNICALL Java_org_example_sorter_SorterService_sortStepByStep
+    (JNIEnv*, jclass, jobject, jstring);
+
 
 }
 

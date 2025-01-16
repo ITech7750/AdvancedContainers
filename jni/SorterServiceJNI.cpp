@@ -141,3 +141,76 @@ Java_org_example_sorter_SorterService_sortByAge(JNIEnv* env, jclass clazz, jstri
         env->ThrowNew(exceptionClass, e.what());
     }
 }
+
+class SortStepRecorder {
+public:
+    static DynamicArray<DynamicArray<int>> sortSteps;
+
+    static void recordSortStep(MutableSequence<int>* seq) {
+        DynamicArray<int> currentStep(seq->size());
+        for (size_t i = 0; i < seq->size(); ++i) {
+            currentStep.set(i, seq->get(i));
+        }
+        sortSteps.add(std::move(currentStep));
+    }
+};
+
+DynamicArray<DynamicArray<int>> SortStepRecorder::sortSteps;
+
+
+JNIEXPORT jobject JNICALL Java_org_example_sorter_SorterService_sortStepByStep
+(JNIEnv* env, jclass clazz, jobject inputList, jstring algorithm) {
+    const char* algorithmCStr = env->GetStringUTFChars(algorithm, nullptr);
+
+    try {
+        jclass listClass = env->FindClass("java/util/List");
+        jmethodID sizeMethod = env->GetMethodID(listClass, "size", "()I");
+        jmethodID getMethod = env->GetMethodID(listClass, "get", "(I)Ljava/lang/Object;");
+
+        jint listSize = env->CallIntMethod(inputList, sizeMethod);
+
+        DynamicArray<int> inputArray(listSize);
+        for (jint i = 0; i < listSize; ++i) {
+            jobject element = env->CallObjectMethod(inputList, getMethod, i);
+            jint value = env->CallIntMethod(element, env->GetMethodID(env->GetObjectClass(element), "intValue", "()I"));
+            inputArray.set(i, value);
+            env->DeleteLocalRef(element);
+        }
+
+        MutableArraySequenceUnqPtr<int> sequence(inputArray.getRawPointer(), listSize);
+
+        SortStepRecorder::sortSteps.clear();
+
+        SorterServiceArray<int>::sortStepByStep(sequence, compareInts, algorithmCStr, &SortStepRecorder::recordSortStep);
+
+        jclass arrayListClass = env->FindClass("java/util/ArrayList");
+        jmethodID arrayListInit = env->GetMethodID(arrayListClass, "<init>", "()V");
+        jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+        jobject stepList = env->NewObject(arrayListClass, arrayListInit);
+
+        jclass integerClass = env->FindClass("java/lang/Integer");
+        jmethodID integerConstructor = env->GetMethodID(integerClass, "<init>", "(I)V");
+
+        for (size_t step = 0; step < SortStepRecorder::sortSteps.size(); ++step) {
+            jobject stepArrayList = env->NewObject(arrayListClass, arrayListInit);
+
+            for (size_t i = 0; i < SortStepRecorder::sortSteps[step].size(); ++i) {
+                jobject value = env->NewObject(integerClass, integerConstructor, SortStepRecorder::sortSteps[step].get(i));
+                env->CallBooleanMethod(stepArrayList, arrayListAdd, value);
+                env->DeleteLocalRef(value);
+            }
+
+            env->CallBooleanMethod(stepList, arrayListAdd, stepArrayList);
+            env->DeleteLocalRef(stepArrayList);
+        }
+
+        env->ReleaseStringUTFChars(algorithm, algorithmCStr);
+
+        return stepList;
+    } catch (const std::exception& e) {
+        env->ReleaseStringUTFChars(algorithm, algorithmCStr);
+        jclass exceptionClass = env->FindClass("java/lang/RuntimeException");
+        env->ThrowNew(exceptionClass, e.what());
+        return nullptr;
+    }
+}

@@ -7,5 +7,5 @@
 int compareByAge(const Person& a, const Person& b);
 int compareByName(const Person& a, const Person& b);
 int compareByHeight(const Person& a, const Person& b);
-
+int compareInts(const int& a, const int& b);
 #endif // TEST_HELPERS_H

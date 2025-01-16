@@ -13,3 +13,7 @@ int compareByHeight(const Person& a, const Person& b) {
     if (a.height > b.height) return 1;
     return 0;
 }
+
+int compareInts(const int& a, const int& b) {
+    return a - b;
+}

@@ -7,6 +7,7 @@ template<typename T>
 class ISorter {
 public:
     virtual void Sort(MutableSequence<T>* seq, int (*cmp)(const T&, const T&)) = 0;
+    virtual void SortStepByStep(MutableSequence<T>* seq, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) = 0;
     virtual ~ISorter() = default;
 };
 

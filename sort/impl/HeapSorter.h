@@ -3,7 +3,6 @@
 
 #include "../BaseSorter.h"
 
-//что такое двоичная куча?
 template<typename T>
 class HeapSorter : public BaseSorter<T> {
 public:
@@ -12,6 +11,18 @@ public:
         for (int i = seq->size() - 1; i > 0; --i) {
             this->swap(seq, 0, i);
             heapify(seq, i, 0, cmp);
+        }
+    }
+
+
+    void SortStepByStep(MutableSequence<T>* seq, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) override {
+        buildHeap(seq, cmp);
+        callback(seq);
+        for (int i = seq->size() - 1; i > 0; --i) {
+            this->swap(seq, 0, i);
+            callback(seq);
+            heapify(seq, i, 0, cmp);
+            callback(seq);
         }
     }
 

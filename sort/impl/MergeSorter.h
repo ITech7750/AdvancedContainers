@@ -13,9 +13,12 @@ public:
         mergeSort(seq, 0, seq->size() - 1, cmp);
     }
 
+    void SortStepByStep(MutableSequence<T>* seq, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) override  {
+        if (!seq || seq->size() == 0) return;
+        mergeSortStepByStep(seq, 0, seq->size() - 1, cmp, callback);
+    }
+
 private:
-    //выделить доп. память один раз при самом первом вызове (на N элементов)
-    //передавать левую и правую границу
     void mergeSort(MutableSequence<T>* seq, int left, int right, int (*cmp)(const T&, const T&)) {
         if (left >= right) return;
 
@@ -24,6 +27,15 @@ private:
         mergeSort(seq, left, mid, cmp);
         mergeSort(seq, mid + 1, right, cmp);
         merge(seq, left, mid, right, cmp);
+    }
+
+    void mergeSortStepByStep(MutableSequence<T>* seq, int left, int right, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) {
+        if (left >= right) return;
+        int mid = left + (right - left) / 2;
+        mergeSortStepByStep(seq, left, mid, cmp, callback);
+        mergeSortStepByStep(seq, mid + 1, right, cmp, callback);
+        merge(seq, left, mid, right, cmp);
+        if (callback) callback(seq);
     }
 
     void merge(MutableSequence<T>* seq, int left, int mid, int right, int (*cmp)(const T&, const T&)) {

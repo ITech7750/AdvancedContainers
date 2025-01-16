@@ -2,6 +2,7 @@
 #define LAB2_BASESORTER_H
 
 #include "ISorter.h"
+#include <functional>
 
 template<typename T>
 class BaseSorter : public ISorter<T> {

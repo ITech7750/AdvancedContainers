@@ -2,6 +2,7 @@ package org.example.sorter;
 
 import org.example.model.Person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SorterService {
@@ -15,4 +16,6 @@ public class SorterService {
     public native static void sortByName(String fileName, boolean isJson, String algorithm);
     public native static double sortByAgeAndGetTime(String fileName, boolean isJson, String algorithm);
     public native static List<Person> getSortedByAge(String fileName, boolean isJson, String algorithm);
+    public static native ArrayList<ArrayList<Integer>> sortStepByStep(
+            List<Integer> inputData, String algorithm);
 }

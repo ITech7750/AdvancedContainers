@@ -33,6 +33,19 @@ public:
 
         return duration;
     }
+
+    static void sortStepByStep(
+            MutableArraySequenceUnqPtr<T>& seq,
+            int (*cmp)(const T&, const T&),
+            const std::string& sorterType,
+            void (*callback)(MutableSequence<T>*))
+    {
+        ISorter<T>* sorter = SorterFactory<T>::createSorter(sorterType);
+        sorter->SortStepByStep(&seq, cmp, callback);
+        delete sorter;
+    }
+
+
 };
 
 #endif

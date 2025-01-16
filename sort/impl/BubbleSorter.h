@@ -6,10 +6,16 @@
 template<typename T>
 class BubbleSorter : public BaseSorter<T> {
 public:
-    /*
-     *до до -i элеиента
-     */
     void Sort(MutableSequence<T>* seq, int (*cmp)(const T&, const T&)) override {
+        bubbleSort(seq, cmp, nullptr);
+    }
+
+    void SortStepByStep(MutableSequence<T>* seq, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) override  {
+        bubbleSort(seq, cmp, callback);
+    }
+
+private:
+    void bubbleSort(MutableSequence<T>* seq, int (*cmp)(const T&, const T&), void (*callback)(MutableSequence<T>*)) {
         int n = seq->size();
         bool swapped;
         do {
@@ -20,6 +26,7 @@ public:
                     swapped = true;
                 }
             }
+            if (callback) callback(seq);
         } while (swapped);
     }
 };

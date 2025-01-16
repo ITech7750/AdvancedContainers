@@ -25,14 +25,13 @@
 #include "../test/hashmap/HashMapTest.h"
 #include "../test/dict/DictionaryTest.h"
 #include "../test/dict/DictionaryTests.h"
-#include <iostream>
-
-
-
+#include "../sort/SorterServiceArray.h"
+#include "../test/helper/TestHelpers.h"
+#include "../collectionunqptr/dinamicarray/DynamicArray.h"
 #include "../gistogram/model/dictionary/HashMap.h"
 #include "../gistogram/model/dictionary/Dictionary.h"
-#include <iostream>
 #include <string>
+#include <iostream>
 
 
 
@@ -610,6 +609,85 @@ void runSortTestsUIList() {
 }
 
 
+DynamicArray<DynamicArray<int>> sortSteps;
+
+void stepCallback(MutableSequence<int>* seq) {
+    DynamicArray<int> currentStep(seq->size());
+    for (size_t i = 0; i < seq->size(); ++i) {
+        currentStep.set(i, seq->get(i));
+    }
+    sortSteps.add(std::move(currentStep));
+}
+
+void displaySteps() {
+    std::cout << "\nШаг сортирвки\n";
+    for (size_t step = 0; step < sortSteps.size(); ++step) {
+        std::cout << "Шаг:" << step + 1 << ": ";
+        for (size_t i = 0; i < sortSteps[step].size(); ++i) {
+            std::cout << sortSteps[step].get(i) << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+
+void runUISortsBySteps() {
+    int choice = 0;
+    while (choice != 3) {
+        std::cout << "\n=== Меню сортировок по шагам ===\n";
+        std::cout << "1. Ввести данные и отсортировать\n";
+        std::cout << "2. Просмотреть шаги сортировки\n";
+        std::cout << "3. Выход\n";
+        std::cout << "Выберите действие: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                sortSteps.clear();
+
+                std::cout << "Введите количество элементов: ";
+                size_t size;
+                std::cin >> size;
+
+                DynamicArray<int> inputArray(size);
+                std::cout << "Введите элементы массива: ";
+                for (size_t i = 0; i < size; ++i) {
+                    int value;
+                    std::cin >> value;
+                    inputArray.set(i, value);
+                }
+
+                MutableArraySequenceUnqPtr<int> sequence(inputArray.getRawPointer(), size);
+
+                std::cout << "Выберите алгоритм сортировки (bubble, quick, merge, heap, insertion): ";
+                std::string algorithm;
+                std::cin >> algorithm;
+
+                SorterServiceArray<int>::sortStepByStep(sequence, compareInts, algorithm.c_str(), stepCallback);
+
+                std::cout << "Сортировка завершена! Используйте опцию 2, чтобы просмотреть шаги.\n";
+                break;
+            }
+            case 2:
+                if (sortSteps.size() == 0) {
+                    std::cout << "Шаги сортировки отсутствуют. Сначала выполните сортировку.\n";
+                } else {
+                    displaySteps();
+                }
+            break;
+
+            case 3:
+                std::cout << "Завершение программы...\n";
+            break;
+
+            default:
+                std::cout << "Некорректный ввод. Пожалуйста, выберите действие из меню.\n";
+        }
+    }
+}
+
+
 
 void runUISorts() {
     int choice = 0;
@@ -617,7 +695,8 @@ void runUISorts() {
         std::cout << "\n===Меню сортировок===\n";
         std::cout << "1. Тесты сортировок на MutableListSequenceUnqPtr\n";
         std::cout << "2. Тесты сортировок на MutableArraySequenceUnqPtr\n";
-        std::cout << "3. Выход\n";
+        std::cout << "3. Смотреть сортировку пошагово\n";
+        std::cout << "0. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
         switch (choice) {
@@ -628,6 +707,8 @@ void runUISorts() {
                 runSortTestsUIArray();
             break;
             case 3:
+                runUISortsBySteps();
+            case 0:
                 std::cout << "Завершение программы...\n";
             break;
             default:
@@ -669,7 +750,7 @@ void runUI() {
         std::cout << "\n=== Главное меню ===\n";
         std::cout << "1. Тесты указателей\n";
         std::cout << "2. Тесты последовательностей\n";
-        std::cout << "3. Тесты сортировок\n";
+        std::cout << "3. Работа с сортировками\n";
         std::cout << "4. Тесты графов\n";
         std::cout << "5. Работа с HashMap Dict и пр.\n";
         std::cout << "6. Выход\n";

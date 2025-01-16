@@ -1,29 +1,26 @@
 package org.example;
 
 import org.example.sorter.SorterService;
-import org.example.model.Person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            double timeTaken = SorterService.sortByAgeAndGetTime("data.json", true, "quick");
-            System.out.println("Sorting by age took: " + timeTaken + " ms.");
+        List<Integer> inputData = new ArrayList<>();
+        inputData.add(5);
+        inputData.add(2);
+        inputData.add(8);
+        inputData.add(1);
+        inputData.add(3);
 
-            List<Person> sortedPersons = SorterService.getSortedByAge("data.json", true, "merge");
-            System.out.println("Sorted persons:");
-            for (Person person : sortedPersons) {
-                System.out.println(person);
-            }
+        String algorithm = "bubble"; // Выберите алгоритм
 
-            SorterService.sortByName("data.txt", false, "heap");
-            System.out.println("Sorting by name completed.");
+        ArrayList<ArrayList<Integer>> steps = SorterService.sortStepByStep(inputData, algorithm);
 
-            SorterService.sortByAge("data.txt", false, "bubble");
-            System.out.println("Sorting by name completed.");
-        } catch (Exception e) {
-            System.err.println("An error occurred: " + e.getMessage());
+        System.out.println("Steps during sorting:");
+        for (int i = 0; i < steps.size(); i++) {
+            System.out.println("Step " + (i + 1) + ": " + steps.get(i));
         }
     }
 }

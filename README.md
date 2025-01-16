@@ -216,6 +216,12 @@ double timeTaken = SorterService.sortByAgeAndGetTime("data.json", true, "quick")
 ```java
 List<Person> sortedPersons = SorterService.getSortedByAge("data.json", true, "merge");
 ```
+
+
+Также можно пошагово посмотреть работу сортировок в интерактивном UI:
+![img_1.png](java/Sorts/img_1.png)
+Исходники в файле [SortVisualization.java](java/Sorts/src/main/java/org/example/perfomance/SortVisualization.java) используют функцию `sortStepByStep` из [SorterServiceArray.h](sort/SorterServiceArray.h) и связывают ее с Java через [jni](jni).
+
 Весь функционал для работы с кастомными контенерами покрыт тестами в парадигме AAA.
 
 

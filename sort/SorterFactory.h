@@ -1,5 +1,3 @@
-
-// SorterFactory.h
 #ifndef LAB2_SORTERFACTORY_H
 #define LAB2_SORTERFACTORY_H
 

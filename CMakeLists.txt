@@ -61,6 +61,8 @@ add_library(NativeLib SHARED
         test/dict/DictionaryTests.cpp
         test/gistogram/GistogramTests.cpp
         test/gistogram/GistogramTests.h
+        jni/HashMapJNI.h
+        jni/HashMapJNI.cpp
 )
 
 target_include_directories(NativeLib PRIVATE ${JNI_INCLUDE_DIRS})
@@ -71,6 +73,106 @@ set_target_properties(NativeLib PROPERTIES
         PREFIX "lib"
 )
 
+# HashMapLibrary
+add_library(HashMapLibrary SHARED
+        test/loadTests/loadTests.cpp
+        test/pointerTests/shrd/shrdPtrTestsAB.cpp
+        test/pointerTests/smrt/smrtPtrTestsAB.cpp
+        test/pointerTests/unq/unqPtrTestsAB.cpp
+        test/loadSeq/loadTestSeq.cpp
+        test/mutableListSeq/TestMutableListSequence.cpp
+        ui/ui.cpp
+        util/random.cpp
+        test/pointerTests/unq/UnqPtrTests.cpp
+        test/pointerTests/smrt/SmrtPtrTests.cpp
+        test/pointerTests/shrd/ShrdPtrTests.cpp
+        test/helper/TestHelpers.cpp
+        test/helper/TestDataManagerList.cpp
+        test/helper/TestDataManagerArray.cpp
+        test/sorts/InteractiveTestSuiteList.cpp
+        test/sorts/InteractiveTestSuiteArray.cpp
+        test/sorts/DataTestSuiteArray.cpp
+        test/sorts/DataTestSuiteList.cpp
+        test/array/DynamicArrayTests.cpp
+        test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
+        jni/SorterServiceJNI.cpp
+        jni/nativelib.cpp
+        test/pointerTests/weak/WeakPtrTests.cpp
+        test/mutableListSeq/MutableListSequenceUnqPtrTests.cpp
+        test/pointerTests/unq/UnqPtrLoadTest.cpp
+        test/pointerTests/smrt/SmrtPtrLoadTest.cpp
+        test/pointerTests/shrd/ShrdPtrLoadTest.cpp
+        test/pointerTests/weak/WeakPtrLoadTest.cpp
+        test/hashmap/HashMapTests.cpp
+        test/hashmap/HashMapTest.cpp
+        test/dict/DictionaryTest.cpp
+        test/dict/DictionaryTests.cpp
+        test/gistogram/GistogramTests.cpp
+        test/gistogram/GistogramTests.h
+        jni/HashMapJNI.h
+        jni/HashMapJNI.cpp
+        jni/GistogramJNI.cpp
+        jni/GistogramJNI.h
+
+)
+add_library(GistogramLibrary SHARED
+        test/loadTests/loadTests.cpp
+        test/pointerTests/shrd/shrdPtrTestsAB.cpp
+        test/pointerTests/smrt/smrtPtrTestsAB.cpp
+        test/pointerTests/unq/unqPtrTestsAB.cpp
+        test/loadSeq/loadTestSeq.cpp
+        test/mutableListSeq/TestMutableListSequence.cpp
+        ui/ui.cpp
+        util/random.cpp
+        test/pointerTests/unq/UnqPtrTests.cpp
+        test/pointerTests/smrt/SmrtPtrTests.cpp
+        test/pointerTests/shrd/ShrdPtrTests.cpp
+        test/helper/TestHelpers.cpp
+        test/helper/TestDataManagerList.cpp
+        test/helper/TestDataManagerArray.cpp
+        test/sorts/InteractiveTestSuiteList.cpp
+        test/sorts/InteractiveTestSuiteArray.cpp
+        test/sorts/DataTestSuiteArray.cpp
+        test/sorts/DataTestSuiteList.cpp
+        test/array/DynamicArrayTests.cpp
+        test/mutableArraySeq/MutableArraySequenceUnqPtrTests.cpp
+        jni/SorterServiceJNI.cpp
+        jni/nativelib.cpp
+        test/pointerTests/weak/WeakPtrTests.cpp
+        test/mutableListSeq/MutableListSequenceUnqPtrTests.cpp
+        test/pointerTests/unq/UnqPtrLoadTest.cpp
+        test/pointerTests/smrt/SmrtPtrLoadTest.cpp
+        test/pointerTests/shrd/ShrdPtrLoadTest.cpp
+        test/pointerTests/weak/WeakPtrLoadTest.cpp
+        test/hashmap/HashMapTests.cpp
+        test/hashmap/HashMapTest.cpp
+        test/dict/DictionaryTest.cpp
+        test/dict/DictionaryTests.cpp
+        test/gistogram/GistogramTests.cpp
+        test/gistogram/GistogramTests.h
+        jni/HashMapJNI.h
+        jni/HashMapJNI.cpp
+        jni/GistogramJNI.cpp
+        jni/GistogramJNI.h
+
+)
+
+target_include_directories(GistogramLibrary PRIVATE ${JNI_INCLUDE_DIRS})
+target_link_libraries(GistogramLibrary PRIVATE ${JNI_LIBRARIES})
+
+set_target_properties(GistogramLibrary PROPERTIES
+        OUTPUT_NAME "GistogramLibrary"
+        PREFIX "lib"
+)
+
+
+target_include_directories(HashMapLibrary PRIVATE ${JNI_INCLUDE_DIRS})
+target_link_libraries(HashMapLibrary PRIVATE ${JNI_LIBRARIES})
+
+set_target_properties(HashMapLibrary PROPERTIES
+        OUTPUT_NAME "HashMapLibrary"
+        PREFIX "lib"
+)
 # SorterService
 add_library(SorterService SHARED
         test/loadTests/loadTests.cpp
@@ -96,7 +198,6 @@ add_library(SorterService SHARED
         jni/SorterServiceJNI.cpp
         test/dict/DictionaryTest.cpp
         test/dict/DictionaryTests.cpp
-
 )
 
 target_include_directories(SorterService PRIVATE ${JNI_INCLUDE_DIRS})
@@ -110,10 +211,9 @@ set_target_properties(SorterService PROPERTIES
 # Executable
 add_executable(PointersExec
         main.cpp
-
 )
 
-target_link_libraries(PointersExec PRIVATE SorterService NativeLib)
+target_link_libraries(PointersExec PRIVATE SorterService NativeLib HashMapLibrary)
 
 # Run target
 add_custom_target(run

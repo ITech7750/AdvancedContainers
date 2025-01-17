@@ -274,3 +274,5 @@ public:
 };
 
 #endif // LABA3_HASHMAP_H
+
+// раскидать по разным файлам

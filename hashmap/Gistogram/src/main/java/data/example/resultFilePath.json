@@ -1,0 +1,27 @@
+{
+  "totalCargo": 100,
+  "routes": [
+    {
+      "start": "CityA",
+      "end": "CityB",
+      "cargo": 50,
+      "distance": 15.5
+    },
+    {
+      "start": "CityB",
+      "end": "CityC",
+      "cargo": 30,
+      "distance": 10.2
+    },
+    {
+      "start": "CityA",
+      "end": "CityC",
+      "cargo": 20,
+      "distance": 5.5
+    }
+  ],
+  "summary": {
+    "totalDistance": 31.2,
+    "averageSpeed": 80
+  }
+}

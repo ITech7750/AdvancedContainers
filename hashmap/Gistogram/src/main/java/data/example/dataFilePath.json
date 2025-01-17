@@ -1,0 +1,45 @@
+{
+  "cities": [
+    {
+      "name": "CityA",
+      "cargoToDrop": 50,
+      "x": 1.5,
+      "y": 3.2
+    },
+    {
+      "name": "CityB",
+      "cargoToDrop": 30,
+      "x": 2.5,
+      "y": 4.1
+    },
+    {
+      "name": "CityC",
+      "cargoToDrop": 20,
+      "x": 3.0,
+      "y": 1.8
+    }
+  ],
+  "roads": [
+    {
+      "name": "Road1",
+      "length": "15.5",
+      "maxSpeed": "100",
+      "start": "CityA",
+      "end": "CityB"
+    },
+    {
+      "name": "Road2",
+      "length": "10.2",
+      "maxSpeed": "80",
+      "start": "CityB",
+      "end": "CityC"
+    },
+    {
+      "name": "Road3",
+      "length": "5.5",
+      "maxSpeed": "60",
+      "start": "CityA",
+      "end": "CityC"
+    }
+  ]
+}

@@ -287,6 +287,16 @@ Gistogram представляет собой структуру данных д
 3. **Анализ графов**:
     - Нахождение кратчайших путей между двумя вершинами (по времени и по количеству вершин).
 
+
+
+### UI Java
+[grafui](grafui)
+Реализация: [NativeLibUI.java](grafui/Gistogram/src/main/java/ui/NativeLibUI.java)
+
+<img src="grafui/Gistogram/img.png" alt="img.png" width="500"/>
+<img src="grafui/Gistogram/img_1.png" alt="img_1.png" width="500"/>
+<img src="img.png" alt="img.png" width="500"/>
+
 ### API на Kotlin
 
 Реализован REST API с использованием Spring Boot для управления логистическими данными:
